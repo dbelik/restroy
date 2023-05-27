@@ -1,0 +1,5 @@
+# Change symlink directory
+build --symlink_prefix=dist/ --experimental_convenience_symlinks=ignore
+
+# Define default variables for the Bazel.
+build --define RESTROY_VERSION=local

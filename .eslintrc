@@ -1,0 +1,63 @@
+{
+  "root": true,
+  "extends": [
+    "airbnb-base",
+    "eslint:recommended",
+    "plugin:eslint-comments/recommended",
+    "plugin:unicorn/recommended",
+    "plugin:promise/recommended",
+    "plugin:security/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2022,
+    "project": ["./tsconfig.json"],
+    "sourceType": "module"
+  },
+  "plugins": [
+    "unicorn",
+    "eslint-comments",
+    "promise",
+    "simple-import-sort"
+  ],
+  "env": {
+    "node": true,
+    "jasmine": true
+  },
+  "rules": {
+    "simple-import-sort/imports": "error",
+    "simple-import-sort/exports": "error",
+    "import/first": "error",
+    "import/newline-after-import": "error",
+    "import/no-duplicates": "error"
+  },
+  "ignorePatterns": [
+    "node_modules"
+  ],
+  "overrides": [
+    {
+      "extends": [
+        "airbnb-typescript/base",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/recommended-requiring-type-checking",
+      ],
+      "files": ["sources/**/*.ts"],
+      "parser": "@typescript-eslint/parser",
+      "plugins": [
+        "@typescript-eslint"
+      ]
+    },
+    {
+      "extends": [
+        "plugin:jasmine/recommended"
+      ],
+      "env": {
+        "jasmine": true
+      },
+      "files": ["tests/**/*.spec.ts"],
+      "plugins": [
+        "jasmine"
+      ]
+    }
+  ]
+}

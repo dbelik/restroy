@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "declaration": true,
+    "module": "commonjs",
+    "target": "ES2022",
+    "composite": true,
+    "sourceMap": true,
+    "types": ["jasmine", "node"]
+  }
+}
