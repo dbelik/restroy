@@ -153,4 +153,10 @@ entities efficiently.
 
 ## Architecture
 
+### Backend
+
 ![Architecture](./components.svg)
+
+### Pipeline Executioner
+
+![Pipeline Executioner Architecture](./pipeline_components.svg)
