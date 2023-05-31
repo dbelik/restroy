@@ -1,0 +1,31 @@
+<mxfile host="65bd71144e">
+    <diagram id="opK8L_7fd9JOHbTizbBW" name="Page-1">
+        <mxGraphModel dx="1381" dy="690" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="4" style="html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;endArrow=ERmany;endFill=0;startArrow=ERmany;startFill=0;strokeColor=#FF3333;" parent="1" source="2" target="3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="2" value="Team" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FF3333;strokeColor=#FF3333;fontColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="183" y="220" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" style="edgeStyle=none;html=1;startArrow=ERmany;startFill=0;endArrow=ERmany;endFill=0;strokeColor=#FF3333;" edge="1" parent="1" source="3" target="12">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="User" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FF3333;strokeColor=#FF3333;fontColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="183" y="330" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#FF3333;startArrow=ERmany;startFill=0;endArrow=ERmany;endFill=0;" edge="1" parent="1" source="12" target="13">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value="Role" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FF3333;strokeColor=#FF3333;fontColor=#FFFFFF;" vertex="1" parent="1">
+                    <mxGeometry x="368" y="330" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" value="Permission" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FF3333;strokeColor=#FF3333;fontColor=#FFFFFF;" vertex="1" parent="1">
+                    <mxGeometry x="548" y="330" width="120" height="60" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
