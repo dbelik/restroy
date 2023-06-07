@@ -6,23 +6,26 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 # Download the necessary packages.
 http_archive(
-    name = "io_bazel_rules_docker",
-    sha256 = "b1e80761a8a8243d03ebca8845e9cc1ba6c82ce7c5179ce2b295cd36f7e394bf",
-    urls = ["https://github.com/bazelbuild/rules_docker/releases/download/v0.25.0/rules_docker-v0.25.0.tar.gz"],
+    name = "rules_oci",
+    sha256 = "db57efd706f01eb3ce771468366baa1614b5b25f4cce99757e2b8d942155b8ec",
+    strip_prefix = "rules_oci-1.0.0",
+    url = "https://github.com/bazel-contrib/rules_oci/releases/download/v1.0.0/rules_oci-v1.0.0.tar.gz",
 )
 
 http_archive(
     name = "aspect_rules_js",
-    sha256 = "d8827db3c34fe47607a0668e86524fd85d5bd74f2bfca93046d07f890b5ad4df",
-    strip_prefix = "rules_js-1.27.0",
-    url = "https://github.com/aspect-build/rules_js/releases/download/v1.27.0/rules_js-v1.27.0.tar.gz",
+    sha256 = "0b69e0967f8eb61de60801d6c8654843076bf7ef7512894a692a47f86e84a5c2",
+    strip_prefix = "rules_js-1.27.1",
+    url = "https://github.com/aspect-build/rules_js/releases/download/v1.27.1/rules_js-v1.27.1.tar.gz",
 )
 
+# NOTE: We'll use old rules_ts version because of this: https://github.com/aspect-build/rules_ts/issues/334
+# Update when this issue is fixed.
 http_archive(
     name = "aspect_rules_ts",
-    sha256 = "ace5b609603d9b5b875d56c9c07182357c4ee495030f40dcefb10d443ba8c208",
-    strip_prefix = "rules_ts-1.4.0",
-    url = "https://github.com/aspect-build/rules_ts/releases/download/v1.4.0/rules_ts-v1.4.0.tar.gz",
+    sha256 = "5b501313118b06093497b6429f124b973f99d1eb5a27a1cc372e5d6836360e9d",
+    strip_prefix = "rules_ts-1.0.2",
+    url = "https://github.com/aspect-build/rules_ts/archive/refs/tags/v1.0.2.tar.gz",
 )
 
 http_archive(
@@ -41,17 +44,17 @@ http_archive(
     ],
 )
 
-# NOTE: Docker rules will fail is we don't generate build_bazel_rules_nodejs with version 5.8.0.
-http_archive(
-    name = "build_bazel_rules_nodejs",
-    sha256 = "dcc55f810142b6cf46a44d0180a5a7fb923c04a5061e2e8d8eb05ccccc60864b",
-    urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/5.8.0/rules_nodejs-5.8.0.tar.gz"],
-)
+# # NOTE: Docker rules will fail is we don't generate build_bazel_rules_nodejs with version 5.8.0.
+# http_archive(
+#     name = "build_bazel_rules_nodejs",
+#     sha256 = "dcc55f810142b6cf46a44d0180a5a7fb923c04a5061e2e8d8eb05ccccc60864b",
+#     urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/5.8.0/rules_nodejs-5.8.0.tar.gz"],
+# )
 
 http_archive(
     name = "rules_nodejs",
-    sha256 = "08337d4fffc78f7fe648a93be12ea2fc4e8eb9795a4e6aa48595b66b34555626",
-    urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/5.8.0/rules_nodejs-core-5.8.0.tar.gz"],
+    sha256 = "764a3b3757bb8c3c6a02ba3344731a3d71e558220adcb0cf7e43c9bba2c37ba8",
+    urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/5.8.2/rules_nodejs-core-5.8.2.tar.gz"],
 )
 
 http_archive(
@@ -78,18 +81,20 @@ http_archive(
 )
 
 # Environment setup
-pnpm_version = "7.26.2"
+pnpm_version = "8.5.1"
+
+node_version = "18.12.1"
 
 # Set up Typescript and Node.js dependencies.
 load("@aspect_rules_js//js:repositories.bzl", "rules_js_dependencies")
 
 rules_js_dependencies()
 
-load("@rules_nodejs//nodejs:repositories.bzl", "DEFAULT_NODE_VERSION", "nodejs_register_toolchains")
+load("@rules_nodejs//nodejs:repositories.bzl", "nodejs_register_toolchains")
 
 nodejs_register_toolchains(
     name = "nodejs",
-    node_version = DEFAULT_NODE_VERSION,
+    node_version = node_version,
 )
 
 load("@aspect_rules_ts//ts:repositories.bzl", "rules_ts_dependencies")
@@ -118,6 +123,10 @@ load("@aspect_rules_js//npm:npm_import.bzl", "npm_translate_lock")
 packages = [
     "//:package.json",
     "//:pnpm-workspace.yaml",
+    "//packages/pipeline-utils:package.json",
+    "//packages/config-utils:package.json",
+    "//packages/kafka-client:package.json",
+    "//services/pipelines/runner:package.json",
 ]
 
 npm_translate_lock(
@@ -128,7 +137,7 @@ npm_translate_lock(
     pnpm_lock = "//:pnpm-lock.yaml",
     pnpm_version = pnpm_version,
     prod = True,
-    update_pnpm_lock = True,
+    update_pnpm_lock = False,
     verify_node_modules_ignored = "//:.bazelignore",
 )
 
@@ -151,20 +160,24 @@ load("@npm//:repositories.bzl", "npm_repositories")
 
 npm_repositories()
 
-# Set up Docker containers.
-load(
-    "@io_bazel_rules_docker//repositories:repositories.bzl",
-    container_repositories = "repositories",
+# Set up Docker.
+load("@rules_oci//oci:dependencies.bzl", "rules_oci_dependencies")
+load("@rules_oci//oci:pull.bzl", "oci_pull")
+
+rules_oci_dependencies()
+
+load("@rules_oci//oci:repositories.bzl", "LATEST_CRANE_VERSION", "oci_register_toolchains")
+
+oci_register_toolchains(
+    name = "oci",
+    crane_version = LATEST_CRANE_VERSION,
 )
 
-container_repositories()
-
-load(
-    "@io_bazel_rules_docker//nodejs:image.bzl",
-    _nodejs_image_repos = "repositories",
+oci_pull(
+    name = "debian-slim",
+    digest = "sha256:8d498c9133965638a6c161f541829352e4a9907969e6b0fd3f9efa1b3acae80b",
+    image = "debian",
 )
-
-_nodejs_image_repos()
 
 # Buildifier setup
 load("@buildifier_prebuilt//:deps.bzl", "buildifier_prebuilt_deps")

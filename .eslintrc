@@ -6,19 +6,29 @@
     "plugin:eslint-comments/recommended",
     "plugin:unicorn/recommended",
     "plugin:promise/recommended",
-    "plugin:security/recommended"
+    "plugin:security/recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:listeners/strict",
+    "airbnb-typescript/base",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    "plugin:jasmine/recommended"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": 2022,
-    "project": ["./tsconfig.json"],
-    "sourceType": "module"
+    "project": "./tsconfig.json",
+    "sourceType": "module",
+    "createDefaultProgram": true
   },
   "plugins": [
     "unicorn",
     "eslint-comments",
     "promise",
-    "simple-import-sort"
+    "simple-import-sort",
+    "clean-timer",
+    "@typescript-eslint",
+    "jasmine"
   ],
   "env": {
     "node": true,
@@ -29,35 +39,27 @@
     "simple-import-sort/exports": "error",
     "import/first": "error",
     "import/newline-after-import": "error",
-    "import/no-duplicates": "error"
+    "import/no-duplicates": "error",
+    "clean-timer/assign-timer-id": "error",
+    "class-methods-use-this": "off",
+    "unicorn/prefer-top-level-await": "off",
+    "import/prefer-default-export": "off",
+    "unicorn/no-array-for-each": "off",
+    "@typescript-eslint/require-await": "off",
+    "import/no-extraneous-dependencies": "off"
   },
   "ignorePatterns": [
-    "node_modules"
+    "node_modules",
+    "bazel-*"
   ],
   "overrides": [
     {
-      "extends": [
-        "airbnb-typescript/base",
-        "plugin:@typescript-eslint/recommended",
-        "plugin:@typescript-eslint/recommended-requiring-type-checking",
-      ],
-      "files": ["sources/**/*.ts"],
-      "parser": "@typescript-eslint/parser",
-      "plugins": [
-        "@typescript-eslint"
-      ]
-    },
-    {
-      "extends": [
-        "plugin:jasmine/recommended"
-      ],
-      "env": {
-        "jasmine": true
-      },
-      "files": ["tests/**/*.spec.ts"],
-      "plugins": [
-        "jasmine"
-      ]
+      "files": ["*.spec.ts"],
+      "rules": {
+        "@typescript-eslint/unbound-method": "off",
+        "@typescript-eslint/dot-notation": "off",
+        "@typescript-eslint/no-unsafe-member-access": "off"
+      }
     }
   ]
 }

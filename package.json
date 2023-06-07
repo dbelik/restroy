@@ -16,15 +16,21 @@
     "eslint-config-airbnb": "19.0.4",
     "eslint-config-airbnb-base": "15.0.0",
     "eslint-config-airbnb-typescript": "17.0.0",
+    "eslint-plugin-clean-timer": "1.0.0",
     "eslint-plugin-eslint-comments": "3.2.0",
     "eslint-plugin-import": "2.27.5",
     "eslint-plugin-jasmine": "4.1.3",
+    "eslint-plugin-listeners": "1.2.0",
     "eslint-plugin-promise": "6.1.1",
     "eslint-plugin-security": "1.7.1",
     "eslint-plugin-simple-import-sort": "10.0.0",
     "eslint-plugin-unicorn": "45.0.2",
     "husky": "8.0.0",
-    "typescript": "4.9.4"
+    "jasmine": "4.6.0",
+    "jasmine-core": "4.6.0",
+    "jasmine-reporters": "2.5.2",
+    "license-checker": "25.0.1",
+    "typescript": "4.9.3"
   },
   "config": {
     "commitizen": {
@@ -32,6 +38,11 @@
     }
   },
   "scripts": {
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "lint:fix": "DEBUG=eslint:cli-engine eslint --fix --ext .ts ."
+  },
+  "packageManager": "pnpm@8.5.1",
+  "engines": {
+    "node": ">=18.12.1"
   }
 }

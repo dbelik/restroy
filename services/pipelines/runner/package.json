@@ -1,0 +1,22 @@
+{
+  "name": "@restroy/pipeline-runner",
+  "description": "Execution service that runs scripts in pipelines",
+  "keywords": [],
+  "private": true,
+  "author": "Denys Bielik",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "typescript": "4.9.3"
+  },
+  "dependencies": {
+    "pg": "8.9.0",
+    "vm2": "3.9.19",
+    "@restroy/pipeline-utils": "workspace:*",
+    "@restroy/kafka-client": "workspace:*",
+    "@restroy/config-utils": "workspace:*"
+  },
+  "packageManager": "pnpm@8.5.1",
+  "engines": {
+    "node": ">=18.12.1"
+  }
+}

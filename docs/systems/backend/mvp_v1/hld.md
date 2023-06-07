@@ -83,7 +83,7 @@ process for users and supporting their collaboration needs within teams.
 | Team | * Team is a customer organization <br> * From a team, people can create boards | Company |
 | Board | * Board is a collection of pipelines <br> * Boards belong to a team | Board with various notifications |
 | Pipeline | * Pipeline is a graph of scripts <br> * Pipelines belong to a board | Email notification pipeline |
-| Script | * Script is a Lua program <br> * Script may have a configuration <br> * Scripts belong to a pipeline | Script that sends email to subscribers |
+| Script | * Script is a JS program <br> * Script may have a configuration <br> * Scripts belong to a pipeline | Script that sends email to subscribers |
 | Configuration | * Configuration is a key-value table <br> * Configuration belongs to a script | Table that defines API keys |
 
 ### Authorization Model
@@ -160,3 +160,15 @@ entities efficiently.
 ### Pipeline Executioner
 
 ![Pipeline Executioner Architecture](./pipeline_components.svg)
+
+## Appendix
+
+### Scripts
+
+In the pipeline execution system, it is essential to store scripts in an append-only 
+database to ensure data integrity and maintain the history of script versions.
+
+Scripts are allowed to run for a limited amount of time. This aligns well with 
+technologies like AWS Lambdas, which provide serverless computing capabilities.
+Limiting the execution time of scripts helps optimize costs by ensuring that 
+resources are utilized efficiently

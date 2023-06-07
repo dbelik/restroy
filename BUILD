@@ -1,7 +1,5 @@
 load("@aspect_rules_js//js:defs.bzl", "js_library")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_config")
-
-# load("@rules_multirun//:defs.bzl", "multirun")
 load("@buildifier_prebuilt//:rules.bzl", "buildifier")
 load("@bazel_skylib//rules:build_test.bzl", "build_test")
 load("@npm//:defs.bzl", "npm_link_all_packages")
@@ -24,16 +22,6 @@ js_library(
     srcs = [".eslintrc"],
     visibility = ["//visibility:public"],
 )
-
-# Create various commands by grouping related targets.
-# multirun(
-#     name = "publish",
-#     commands = [
-#       # Run publish instructions for all services.
-#       "echo 'You publish instructions here.''"
-#     ],
-#     jobs = 0,
-# )
 
 # Bazel linter
 buildifier(
@@ -61,8 +49,11 @@ buildifier(
 build_test(
     name = "build.check",
     targets = [
-        # Services
-        # Publish target creates a dependency graph for most targets.
+        # Services & Packages
+        "//packages/pipeline-utils",
+        "//packages/config-utils",
+        "//packages/kafka-client",
+        "//services/pipelines/runner:tarball",
 
         # Misc. targets
         ":node_modules",
