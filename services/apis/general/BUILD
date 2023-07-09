@@ -1,7 +1,8 @@
 load("@aspect_rules_swc//swc:defs.bzl", "swc")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 load("@aspect_rules_js//js:defs.bzl", "js_binary", "js_image_layer")
-load("@aspect_rules_jasmine//jasmine:defs.bzl", "jasmine_test")
+
+# load("@aspect_rules_jasmine//jasmine:defs.bzl", "jasmine_test")
 load("@rules_oci//oci:defs.bzl", "oci_image", "oci_tarball")
 load("@npm//:eslint/package_json.bzl", eslint_bin = "bin")
 load("@npm//:license-checker/package_json.bzl", license_checker_bin = "bin")
