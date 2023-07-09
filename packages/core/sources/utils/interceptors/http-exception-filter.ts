@@ -7,10 +7,20 @@ type HttpExceptionResponse = {
   property: string;
   value: unknown;
   constraints: object;
+  children?: HttpExceptionResponse[];
 };
 
 @Catch(HttpException)
 export default class HttpExceptionFilter implements ExceptionFilter {
+  formatError(response: HttpExceptionResponse[]): HttpExceptionResponse[] {
+    return response.map((error) => ({
+      property: error.property,
+      value: error.value,
+      constraints: error.constraints,
+      children: this.formatError(error.children),
+    }));
+  }
+
   async catch(exception: HttpException, host: ArgumentsHost) {
     const context = host.switchToHttp();
     const response = context.getResponse<FastifyReply>();
@@ -22,11 +32,7 @@ export default class HttpExceptionFilter implements ExceptionFilter {
     if (code === HttpStatus.FORBIDDEN) {
       const responseErrors = exception.getResponse() as HttpExceptionResponse[];
       if (Array.isArray(responseErrors)) {
-        errors = responseErrors.map((error) => ({
-          property: error.property,
-          value: error.value,
-          constraints: error.constraints,
-        }));
+        errors = this.formatError(responseErrors);
       }
     }
 

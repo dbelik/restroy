@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import {
   AtLeastOnePipe,
-  PipelineCreateInputDto, PipelineModel, PipelineService, PipelineUpdateInputDto,
+  PipelineCreateInputDto, PipelineModel, PipelineService, PipelineUpdateInputDto, SearchInputDto,
 } from '@restroy/core';
 import { FastifyRequest as Request } from 'fastify';
 
@@ -21,6 +21,14 @@ export default class PipelineController {
       @Param('pipelineId') pipelineId: string,
   ): Promise<PipelineModel> {
     return this.pipelineService.getPipeline(pipelineId);
+  }
+
+  @Post('/search')
+  public async getPipelines(
+    @Req() request: Request,
+      @Body() body: SearchInputDto,
+  ): Promise<PipelineModel[]> {
+    return this.pipelineService.searchPipelines(body);
   }
 
   @Patch(':pipelineId')

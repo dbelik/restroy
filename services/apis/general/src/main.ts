@@ -11,6 +11,7 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalPipes(new ValidationPipe({
     transform: true,
+    forbidUnknownValues: false,
     exceptionFactory: (errors) => new HttpException(errors, HttpStatus.FORBIDDEN),
   }));
   app.useGlobalPipes(new RemoveEmptyPipe());

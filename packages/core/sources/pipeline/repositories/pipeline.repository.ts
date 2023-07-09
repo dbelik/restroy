@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 
-import { IRepositoryClient } from '../../utils/repositories';
+import { IRepositoryClient, SearchRepository } from '../../utils/repositories';
 import { PipelineModel } from '../models';
 
 export type PipelineUpdateInput = Partial<Pick<PipelineModel, 'name' | 'description' | 'interval' | 'next_date' | 'board_id' | 'structure' | 'deactivated_at'>>;
 export type PipelineCreateInput = Pick<PipelineModel, 'name' | 'description' | 'interval' | 'next_date' | 'board_id'>;
 
 @Injectable()
-export default class PipelineRepository {
+export default class PipelineRepository extends SearchRepository<PipelineModel> {
   async getPipeline(client: IRepositoryClient, id: string): Promise<PipelineModel> {
     const query = 'SELECT * FROM pipelines WHERE id = $1';
     const parameters = [id];
