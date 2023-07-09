@@ -1,5 +1,7 @@
 packages:
-  - 'packages/pipeline-utils'
-  - 'packages/config-utils'
-  - 'packages/kafka-client'
-  - 'services/pipelines/runner'
+  - "packages/pipeline-utils"
+  - "packages/config-utils"
+  - "packages/kafka-client"
+  - "packages/core"
+  - "services/pipelines/runner"
+  - "services/apis/general"

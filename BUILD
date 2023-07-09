@@ -53,6 +53,8 @@ build_test(
         "//packages/pipeline-utils",
         "//packages/config-utils",
         "//packages/kafka-client",
+        "//packages/core",
+        "//services/apis/general:tarball",
         "//services/pipelines/runner:tarball",
 
         # Misc. targets

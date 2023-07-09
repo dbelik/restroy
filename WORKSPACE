@@ -126,7 +126,9 @@ packages = [
     "//packages/pipeline-utils:package.json",
     "//packages/config-utils:package.json",
     "//packages/kafka-client:package.json",
+    "//packages/core:package.json",
     "//services/pipelines/runner:package.json",
+    '//services/apis/general:package.json',
 ]
 
 npm_translate_lock(

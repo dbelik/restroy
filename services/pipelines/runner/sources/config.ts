@@ -19,4 +19,8 @@ export default {
     },
     groupId: config.get('PIPELINE_RUNNER__KAFKA_GROUPID', 'pipeline-runner'),
   } as KafkaClientOptions,
+
+  pipelines: {
+    topic: config.get('PIPELINE_RUNNER__PIPELINES__TOPIC', 'pipelines'),
+  },
 };

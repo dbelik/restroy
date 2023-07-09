@@ -18,7 +18,7 @@ To start the services, follow these steps:
    This will build the necessary images for the services.
 2. Run the services using Docker Compose. Execute the following command:
    ```bash
-   COMPOSE_PROFILES=pgadmin,kafkaui docker compose up
+   COMPOSE_PROFILES=pgadmin,kafkaui,migrate docker compose up
    ```
    Replace `COMPOSE_PROFILES` with the desired profiles or leave it empty to
    run the minimum required services.

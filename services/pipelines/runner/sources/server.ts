@@ -11,7 +11,7 @@ class PipelineRunnerServer {
 
   async init() {
     await this.consumer.init();
-    await this.consumer.subscribe('example-topic', {
+    await this.consumer.subscribe(config.pipelines.topic, {
       message: async (payload) => console.log(payload),
     });
   }

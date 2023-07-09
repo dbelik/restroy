@@ -1,6 +1,6 @@
 {
   "include": ["packages/**/*", "services/**/*"],
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules", "dist"],
   "compilerOptions": {
     "strict": true,
     "declaration": true,
@@ -9,6 +9,16 @@
     "esModuleInterop": true,
     "composite": true,
     "sourceMap": true,
-    "types": ["jasmine", "node"]
+    "skipLibCheck": true,
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "forceConsistentCasingInFileNames": false,
+    "noFallthroughCasesInSwitch": false,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "types": ["jasmine", "node"],
   }
 }

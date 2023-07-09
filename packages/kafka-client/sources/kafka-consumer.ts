@@ -3,8 +3,10 @@ import { Consumer, EachMessageHandler, EachMessagePayload } from 'kafkajs';
 import KafkaClientError, { KafkaClientErrorCode } from './client-error';
 import KafkaClient, { KafkaClientOptions, KafkaClientState } from './kafka-client';
 
+export type KafkaMessageHandler = EachMessageHandler;
+
 export interface KafkaSubscribeHandlers {
-  message: EachMessageHandler;
+  message: KafkaMessageHandler;
 }
 
 /**

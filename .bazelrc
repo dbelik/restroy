@@ -1,3 +1,5 @@
 # Define default variables for the Bazel.
 
 build --define RESTROY_VERSION=local
+
+test --test_output=errors
