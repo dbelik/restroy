@@ -1,0 +1,17 @@
+{
+  "name": "@restroy/clients",
+  "version": "0.0.1",
+  "description": "Restroy clients for simplifying work with Restroy APIs",
+  "keywords": [],
+  "private": true,
+  "author": "Denys Bielik",
+  "license": "Apache-2.0",
+  "packageManager": "pnpm@8.5.1",
+  "dependencies": {
+    "axios": "1.4.0",
+    "@restroy/core": "workspace:*"
+  },
+  "engines": {
+    "node": ">=18.12.1"
+  }
+}

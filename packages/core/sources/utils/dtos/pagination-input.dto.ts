@@ -5,12 +5,12 @@ import {
 export default class PaginationPageInputDto {
   @IsOptional()
   @IsInt()
-  @Min(0)
-  public offset?: number;
+  @Min(1)
+  public page?: number;
 
   @IsOptional()
   @IsInt()
-  @Min(0)
+  @Min(1)
   @Max(100)
   public limit?: number;
 }

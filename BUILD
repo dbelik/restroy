@@ -53,9 +53,11 @@ build_test(
         "//packages/pipeline-utils",
         "//packages/config-utils",
         "//packages/kafka-client",
+        "//packages/clients",
         "//packages/core",
         "//services/apis/general:tarball",
         "//services/pipelines/runner:tarball",
+        "//services/pipelines/scheduler:tarball",
 
         # Misc. targets
         ":node_modules",

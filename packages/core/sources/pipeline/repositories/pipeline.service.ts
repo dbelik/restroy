@@ -2,8 +2,8 @@ import {
   HttpException, HttpStatus, Inject, Injectable,
 } from '@nestjs/common';
 
-import { DatabaseClient, SearchInputDto } from '../../utils';
-import CronService from '../../utils/cron/cron.service';
+import { DatabaseClient, SearchInputDto, SearchResult } from '../../utils';
+import { FilterOperatorsEnum } from '../../utils/dtos/filter-input.dto';
 import { PipelineCreateInputDto, PipelineUpdateInputDto } from '../dtos';
 import { PipelineModel } from '../models';
 import PipelineRepository from './pipeline.repository';
@@ -12,7 +12,6 @@ import PipelineRepository from './pipeline.repository';
 export default class PipelineService {
   constructor(
     private readonly pipelineRepository: PipelineRepository,
-    private readonly cronService: CronService,
     @Inject('DATABASE_POSTGRES') private readonly databaseClient: DatabaseClient,
   ) {}
 
@@ -24,7 +23,15 @@ export default class PipelineService {
     return result;
   }
 
-  async searchPipelines(search: SearchInputDto): Promise<PipelineModel[]> {
+  async getPipelines(ids: PipelineModel['id'][]): Promise<PipelineModel[]> {
+    const result = await this.pipelineRepository.getPipelines(this.databaseClient, ids);
+    if (!result) {
+      throw new HttpException('Pipelines not found', HttpStatus.NOT_FOUND);
+    }
+    return result;
+  }
+
+  async searchPipelines(search: SearchInputDto): Promise<SearchResult<PipelineModel>> {
     const allowedFields = [
       'id', 'name', 'description', 'interval', 'next_date', 'structure', 'executed_times',
       'board_id', 'hourly_executed_times', 'hourly_failed_times', 'daily_executed_times',
@@ -32,7 +39,7 @@ export default class PipelineService {
       'monthly_failed_times', 'yearly_executed_times', 'yearly_failed_times', 'created_at',
       'updated_at', 'deactivated_at', 'deleted_at',
     ];
-    const result = await this.pipelineRepository.search(
+    const result = await this.pipelineRepository.searchPipelines(
       this.databaseClient,
       search,
       allowedFields,
@@ -41,10 +48,8 @@ export default class PipelineService {
   }
 
   async createPipeline(data: PipelineCreateInputDto): Promise<PipelineModel> {
-    const nextDate = this.cronService.getNextDate(data.interval).toISOString();
     const pipeline = {
       ...data,
-      next_date: nextDate,
     };
     return this.pipelineRepository.createPipeline(this.databaseClient, pipeline);
   }
@@ -56,5 +61,35 @@ export default class PipelineService {
       deactivated_at: disabled ? new Date().toISOString() : undefined,
     };
     return this.pipelineRepository.updatePipeline(this.databaseClient, id, pipeline);
+  }
+
+  async advanceNextDate(dateString: string): Promise<SearchResult<PipelineModel>> {
+    const date = new Date(dateString);
+    const pipelines = await this.pipelineRepository.searchPipelines(this.databaseClient, {
+      filters: [{
+        name: 'next_date',
+        operator: FilterOperatorsEnum.LESS_THAN_OR_EQUALS,
+        value: date.toISOString(),
+      }],
+    }, ['next_date']);
+
+    if (pipelines.meta.total === 0) {
+      return pipelines;
+    }
+
+    const result = await this.pipelineRepository.advancePipelines(
+      this.databaseClient,
+      pipelines.data,
+      date,
+    );
+
+    return {
+      data: result,
+      meta: {
+        total: pipelines.meta.total,
+        page: pipelines.meta.page,
+        limit: pipelines.meta.limit,
+      },
+    };
   }
 }

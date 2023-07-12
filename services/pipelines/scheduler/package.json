@@ -1,18 +1,19 @@
 {
-  "name": "@restroy/pipeline-runner",
-  "description": "Execution service that runs scripts in pipelines",
+  "name": "@restroy/pipeline-scheduler",
+  "description": "Pipeline scheduler",
   "keywords": [],
   "private": true,
   "author": "Denys Bielik",
   "license": "Apache-2.0",
   "devDependencies": {
+    "@types/node-schedule": "2.1.0",
     "typescript": "4.9.3"
   },
   "dependencies": {
-    "vm2": "3.9.19",
-    "@restroy/pipeline-utils": "workspace:*",
     "@restroy/kafka-client": "workspace:*",
-    "@restroy/config-utils": "workspace:*"
+    "@restroy/config-utils": "workspace:*",
+    "@restroy/clients": "workspace:*",
+    "node-schedule": "2.1.1"
   },
   "packageManager": "pnpm@8.5.1",
   "engines": {

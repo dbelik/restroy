@@ -5,7 +5,9 @@ import {
 } from '@nestjs/common';
 import {
   AtLeastOnePipe,
-  PipelineCreateInputDto, PipelineModel, PipelineService, PipelineUpdateInputDto, SearchInputDto,
+  PipelineAdvanceNextDate,
+  PipelineCreateInputDto, PipelineModel, PipelineService,
+  PipelineUpdateInputDto, SearchInputDto, SearchResult,
 } from '@restroy/core';
 import { FastifyRequest as Request } from 'fastify';
 
@@ -27,7 +29,7 @@ export default class PipelineController {
   public async getPipelines(
     @Req() request: Request,
       @Body() body: SearchInputDto,
-  ): Promise<PipelineModel[]> {
+  ): Promise<SearchResult<PipelineModel>> {
     return this.pipelineService.searchPipelines(body);
   }
 
@@ -39,6 +41,14 @@ export default class PipelineController {
       @Body() body: PipelineUpdateInputDto,
   ): Promise<PipelineModel> {
     return this.pipelineService.updatePipeline(pipelineId, body);
+  }
+
+  @Patch('/due')
+  public async updateAndReturnDuePipelines(
+    @Req() request: Request,
+      @Body() body: PipelineAdvanceNextDate,
+  ): Promise<SearchResult<PipelineModel>> {
+    return this.pipelineService.advanceNextDate(body.next_date);
   }
 
   @Post()

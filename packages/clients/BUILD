@@ -1,9 +1,8 @@
 load("@aspect_rules_swc//swc:defs.bzl", "swc")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
-load("@aspect_rules_js//js:defs.bzl", "js_binary", "js_image_layer")
 
 # load("@aspect_rules_jasmine//jasmine:defs.bzl", "jasmine_test")
-load("@rules_oci//oci:defs.bzl", "oci_image", "oci_tarball")
+load("@aspect_rules_js//npm:defs.bzl", "npm_package")
 load("@npm//:eslint/package_json.bzl", eslint_bin = "bin")
 load("@npm//:license-checker/package_json.bzl", license_checker_bin = "bin")
 load("@npm//:defs.bzl", "npm_link_all_packages")
@@ -22,7 +21,7 @@ is_debug = select({
 
 # Compile sources.
 ts_project(
-    name = "scheduler",
+    name = "lib",
     srcs = glob(
         [
             "**/*.ts",
@@ -37,7 +36,6 @@ ts_project(
     validate = True,
     deps = select({
         "//:build_optimized": [
-            ":node_modules_prod",
         ],
         "//conditions:default": [
             ":node_modules",
@@ -47,12 +45,11 @@ ts_project(
     }),
 )
 
-js_binary(
-    name = "binary",
-    data = [
-        ":scheduler",
-    ],
-    entry_point = "sources/server.js",
+npm_package(
+    name = "clients",
+    srcs = [":lib"],
+    package = "@restroy/clients",
+    visibility = ["//visibility:public"],
 )
 
 # Automated tests and linters
@@ -65,7 +62,7 @@ js_binary(
 #     transpiler = swc,
 #     tsconfig = "//:tsconfig",
 #     deps = [
-#         ":scheduler",
+#         ":lib",
 #         ":node_modules",
 #         "//:node_modules/@types/jasmine",
 #         "//:node_modules/@types/node",
@@ -113,28 +110,4 @@ license_checker_bin.license_checker_test(
         "package.json",
         ":node_modules",
     ],
-)
-
-# Build and publish Docker image
-js_image_layer(
-    name = "layers",
-    binary = ":binary",
-    root = "/app",
-)
-
-oci_image(
-    name = "image",
-    base = "@debian-slim",
-    cmd = ["/app/services/pipelines/scheduler/binary"],
-    entrypoint = ["bash"],
-    tars = [
-        ":layers",
-    ],
-)
-
-oci_tarball(
-    name = "tarball",
-    image = ":image",
-    repo_tags = ["restroy/pipeline-scheduler:latest"],
-    visibility = ["//:__pkg__"],
 )
