@@ -45,6 +45,7 @@
     "unicorn/prefer-top-level-await": "off",
     "import/prefer-default-export": "off",
     "unicorn/no-array-for-each": "off",
+    "unicorn/no-null": "off",
     "@typescript-eslint/require-await": "off",
     "import/no-extraneous-dependencies": "off"
   },

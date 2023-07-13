@@ -1,6 +1,6 @@
 import {
   Body,
-  Controller, Get, Param,
+  Controller, Delete, Get, Param,
   Patch, Post, Req, UsePipes,
 } from '@nestjs/common';
 import {
@@ -57,5 +57,13 @@ export default class PipelineController {
       @Body() body: PipelineCreateInputDto,
   ): Promise<PipelineModel> {
     return this.pipelineService.createPipeline(body);
+  }
+
+  @Delete(':pipelineId')
+  public async deletePipeline(
+    @Req() request: Request,
+      @Param('pipelineId') pipelineId: string,
+  ): Promise<PipelineModel> {
+    return this.pipelineService.deletePipeline(pipelineId);
   }
 }

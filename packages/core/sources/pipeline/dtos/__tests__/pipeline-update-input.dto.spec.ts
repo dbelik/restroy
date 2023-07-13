@@ -5,7 +5,9 @@ import PipelineUpdateInputDto from '../pipeline-update-input.dto';
 
 describe('PipelineUpdateInputDto class', () => {
   it('should allow passing only pipeline structure', async () => {
-    const pipeline = { structure: JSON.stringify({ some: 'value' }) };
+    const pipeline = {
+      structure: '{"nodes":[{"v":"START"},{"v":"11"},{"v":"10"}],"edges":[{"v":"START","w":"11"},{"v":"START","w":"10"}]}',
+    };
     const dto = plainToInstance(PipelineUpdateInputDto, pipeline);
     const errors = await validate(dto);
 

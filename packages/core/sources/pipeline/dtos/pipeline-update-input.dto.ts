@@ -1,10 +1,11 @@
 import {
   IsBoolean,
   IsJSON,
-  IsNotEmpty, IsOptional, IsString, Length, Matches,
+  IsNotEmpty, IsOptional, IsString, Length, Matches, Validate,
 } from 'class-validator';
 
 import regex from '../../regex';
+import { PipelineStructureConstraint } from '../validators';
 
 export default class PipelineUpdateInputDto {
   @IsString()
@@ -23,8 +24,9 @@ export default class PipelineUpdateInputDto {
   readonly interval?: string;
 
   @IsJSON()
+  @IsString()
   @IsNotEmpty()
-  // @TODO: Add strcutre validation in here
+  @Validate(PipelineStructureConstraint)
   @IsOptional()
   readonly structure?: string;
 

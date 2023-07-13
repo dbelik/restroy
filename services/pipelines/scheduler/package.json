@@ -11,7 +11,9 @@
   },
   "dependencies": {
     "@restroy/kafka-client": "workspace:*",
+    "@restroy/core": "workspace:*",
     "@restroy/config-utils": "workspace:*",
+    "@restroy/pipeline-utils": "workspace:*",
     "@restroy/clients": "workspace:*",
     "node-schedule": "2.1.1"
   },

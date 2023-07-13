@@ -22,6 +22,7 @@ export default {
 
   pipelines: {
     topic: config.get('PIPELINE_SCHEDULER__PIPELINES__TOPIC', 'pipelines'),
+    firstNodeId: config.get('PIPELINE_SCHEDULER__PIPELINES__FIRST_NODE_ID', 'START'),
   },
 
   api: {

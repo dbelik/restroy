@@ -102,6 +102,9 @@ importers:
       '@nestjs/common':
         specifier: ^9.0.0
         version: 9.0.0(class-transformer@0.5.1)(class-validator@0.14.0)(reflect-metadata@0.1.13)(rxjs@7.8.1)
+      '@restroy/pipeline-utils':
+        specifier: workspace:*
+        version: link:../pipeline-utils
       class-transformer:
         specifier: 0.5.1
         version: 0.5.1
@@ -228,9 +231,15 @@ importers:
       '@restroy/config-utils':
         specifier: workspace:*
         version: link:../../../packages/config-utils
+      '@restroy/core':
+        specifier: workspace:*
+        version: link:../../../packages/core
       '@restroy/kafka-client':
         specifier: workspace:*
         version: link:../../../packages/kafka-client
+      '@restroy/pipeline-utils':
+        specifier: workspace:*
+        version: link:../../../packages/pipeline-utils
       node-schedule:
         specifier: 2.1.1
         version: 2.1.1

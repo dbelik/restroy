@@ -55,7 +55,7 @@ describe('KafkaProducer class', () => {
       expect(mockKafkajsProducer.send).toHaveBeenCalledWith({
         topic: 'test',
         messages: [{ key: 'test', value: 'test' }],
-        compression: CompressionTypes.Snappy,
+        compression: CompressionTypes.GZIP,
       });
     });
 
@@ -71,7 +71,7 @@ describe('KafkaProducer class', () => {
       expect(mockKafkajsProducer.send).toHaveBeenCalledWith({
         topic: 'test',
         messages: [{ key: 'test', value: 'test' }],
-        compression: CompressionTypes.Snappy,
+        compression: CompressionTypes.GZIP,
       });
     });
   });

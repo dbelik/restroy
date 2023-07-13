@@ -6,7 +6,7 @@ import { DatabaseClient, SearchInputDto, SearchResult } from '../../utils';
 import { FilterOperatorsEnum } from '../../utils/dtos/filter-input.dto';
 import { PipelineCreateInputDto, PipelineUpdateInputDto } from '../dtos';
 import { PipelineModel } from '../models';
-import PipelineRepository from './pipeline.repository';
+import PipelineRepository, { PipelineUpdateInput } from './pipeline.repository';
 
 @Injectable()
 export default class PipelineService {
@@ -48,19 +48,23 @@ export default class PipelineService {
   }
 
   async createPipeline(data: PipelineCreateInputDto): Promise<PipelineModel> {
-    const pipeline = {
-      ...data,
-    };
-    return this.pipelineRepository.createPipeline(this.databaseClient, pipeline);
+    return this.pipelineRepository.createPipeline(this.databaseClient, data);
   }
 
   async updatePipeline(id: PipelineModel['id'], data: PipelineUpdateInputDto): Promise<PipelineModel> {
     const { disabled, ...pipelineData } = data;
-    const pipeline = {
+    const pipeline: PipelineUpdateInput = {
       ...pipelineData,
-      deactivated_at: disabled ? new Date().toISOString() : undefined,
     };
-    return this.pipelineRepository.updatePipeline(this.databaseClient, id, pipeline);
+    if (disabled) {
+      pipeline.deactivated_at = new Date().toISOString();
+    }
+
+    const result = await this.pipelineRepository.updatePipeline(this.databaseClient, id, pipeline);
+    if (!result) {
+      throw new HttpException('Pipeline not found', HttpStatus.NOT_FOUND);
+    }
+    return result;
   }
 
   async advanceNextDate(dateString: string): Promise<SearchResult<PipelineModel>> {
@@ -91,5 +95,13 @@ export default class PipelineService {
         limit: pipelines.meta.limit,
       },
     };
+  }
+
+  async deletePipeline(id: PipelineModel['id']): Promise<PipelineModel> {
+    const data = await this.pipelineRepository.deletePipeline(this.databaseClient, id);
+    if (!data) {
+      throw new HttpException('Pipeline not found', HttpStatus.NOT_FOUND);
+    }
+    return data;
   }
 }

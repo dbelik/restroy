@@ -1,6 +1,9 @@
-import { IsString, Length, Matches } from 'class-validator';
+import {
+  IsJSON, IsNotEmpty, IsString, Length, Matches, Validate,
+} from 'class-validator';
 
 import regex from '../../regex';
+import { PipelineStructureConstraint } from '../validators';
 
 export default class PipelineCreateInputDto {
   @IsString()
@@ -18,4 +21,10 @@ export default class PipelineCreateInputDto {
   @IsString()
   @Length(1, 255)
   readonly board_id: string;
+
+  @IsJSON()
+  @IsString()
+  @IsNotEmpty()
+  @Validate(PipelineStructureConstraint)
+  readonly structure: string;
 }

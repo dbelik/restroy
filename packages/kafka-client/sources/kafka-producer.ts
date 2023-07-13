@@ -30,7 +30,7 @@ export default class KafkaProducer extends KafkaClient {
       const result = await this.producer.send({
         topic,
         messages,
-        compression: CompressionTypes.Snappy,
+        compression: CompressionTypes.GZIP,
       });
       return result;
     } catch (error) {

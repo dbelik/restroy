@@ -12,7 +12,10 @@ class PipelineRunnerServer {
   async init() {
     await this.consumer.init();
     await this.consumer.subscribe(config.pipelines.topic, {
-      message: async (payload) => console.log(payload),
+      message: async (payload) => {
+        const pipelineId = payload.message.value.toString();
+        console.log(`Pipeline ID: ${pipelineId}`);
+      },
     });
   }
 }

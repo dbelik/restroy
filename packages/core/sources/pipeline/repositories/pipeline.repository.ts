@@ -5,7 +5,7 @@ import { IRepositoryClient, SearchRepository } from '../../utils/repositories';
 import { PipelineModel } from '../models';
 
 export type PipelineUpdateInput = Partial<Pick<PipelineModel, 'name' | 'description' | 'interval' | 'next_date' | 'board_id' | 'structure' | 'deactivated_at'>>;
-export type PipelineCreateInput = Pick<PipelineModel, 'name' | 'description' | 'interval' | 'board_id'>;
+export type PipelineCreateInput = Pick<PipelineModel, 'name' | 'description' | 'interval' | 'board_id' | 'structure'>;
 
 @Injectable()
 export default class PipelineRepository extends SearchRepository<PipelineModel> {
@@ -63,14 +63,15 @@ export default class PipelineRepository extends SearchRepository<PipelineModel> 
     const nextDate = this.cronService.getNextDate(data.interval).toISOString();
     const query = `
       INSERT INTO workspace_management.pipelines (
-        name, description, interval, next_date, board_id
+        name, description, interval, next_date, board_id, structure
       ) VALUES (
-        $1, $2, $3, $4, $5
+        $1, $2, $3, $4, $5, $6
       ) RETURNING *;
     `;
 
     const parameters = [
-      data.name, data.description, data.interval, nextDate, data.board_id,
+      data.name, data.description, data.interval,
+      nextDate, data.board_id, data.structure,
     ];
 
     const result = await client.query<PipelineModel>(query, parameters);
@@ -109,5 +110,12 @@ export default class PipelineRepository extends SearchRepository<PipelineModel> 
     query += ') RETURNING *;';
 
     return client.query<PipelineModel>(query, parameters);
+  }
+
+  async deletePipeline(client: IRepositoryClient, id: string): Promise<PipelineModel | undefined> {
+    const query = 'DELETE FROM workspace_management.pipelines WHERE id = $1 RETURNING *;';
+    const parameters = [id];
+    const result = await client.query<PipelineModel>(query, parameters);
+    return result[0];
   }
 }
