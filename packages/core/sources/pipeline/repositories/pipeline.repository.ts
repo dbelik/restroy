@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
-import { CronService, SearchInputDto } from '../../utils';
-import { IRepositoryClient, SearchRepository } from '../../utils/repositories';
+import { CronService, SearchInputDto } from '../../common';
+import { IRepositoryClient, SearchRepository } from '../../common/repositories';
 import { PipelineModel } from '../models';
 
 export type PipelineUpdateInput = Partial<Pick<PipelineModel, 'name' | 'description' | 'interval' | 'next_date' | 'board_id' | 'structure' | 'deactivated_at'>>;
@@ -60,7 +60,6 @@ export default class PipelineRepository extends SearchRepository<PipelineModel> 
     client: IRepositoryClient,
     data: PipelineCreateInput,
   ): Promise<PipelineModel> {
-    const nextDate = this.cronService.getNextDate(data.interval).toISOString();
     const query = `
       INSERT INTO workspace_management.pipelines (
         name, description, interval, next_date, board_id, structure
@@ -71,7 +70,7 @@ export default class PipelineRepository extends SearchRepository<PipelineModel> 
 
     const parameters = [
       data.name, data.description, data.interval,
-      nextDate, data.board_id, data.structure,
+      new Date(0).toISOString(), data.board_id, data.structure,
     ];
 
     const result = await client.query<PipelineModel>(query, parameters);

@@ -1,6 +1,6 @@
 import { IsDateString, IsString, Validate } from 'class-validator';
 
-import { UpTodayConstraint } from '../../utils';
+import { UpTodayConstraint } from '../../common';
 
 export default class PipelineAdvanceNextDate {
   @IsString()

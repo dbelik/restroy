@@ -2,8 +2,8 @@ import {
   HttpException, HttpStatus, Inject, Injectable,
 } from '@nestjs/common';
 
-import { DatabaseClient, SearchInputDto, SearchResult } from '../../utils';
-import { FilterOperatorsEnum } from '../../utils/dtos/filter-input.dto';
+import { DatabaseClient, SearchInputDto, SearchResult } from '../../common';
+import { FilterOperatorsEnum } from '../../common/dtos/filter-input.dto';
 import { PipelineCreateInputDto, PipelineUpdateInputDto } from '../dtos';
 import { PipelineModel } from '../models';
 import PipelineRepository, { PipelineUpdateInput } from './pipeline.repository';

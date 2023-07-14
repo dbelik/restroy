@@ -1,5 +1,5 @@
-import { PipelineMessage, PipelineModel } from '@restroy/core';
-import { Pipeline } from '@restroy/pipeline-utils';
+import { PipelineModel } from '@restroy/core';
+import { Pipeline, PipelineNode } from '@restroy/pipeline-utils';
 
 export type MappedPipeline = {
   id: string;
@@ -21,7 +21,7 @@ export default class PipelineHelper {
     return pipelineData;
   }
 
-  public mapChildrenToMessages(pipelineId: string, children: string[]): PipelineMessage[] {
+  public mapChildrenToMessages(pipelineId: string, children: string[]): PipelineNode[] {
     return children.map((childId) => ({
       pipeline_id: pipelineId,
       node_id: childId,

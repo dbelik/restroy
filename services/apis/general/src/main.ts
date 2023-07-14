@@ -1,8 +1,7 @@
 import { HttpException, HttpStatus, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
-import { HttpExceptionFilter } from '@restroy/core';
-import RemoveEmptyPipe from '@restroy/core/sources/utils/pipes/remove-empty';
+import { HttpExceptionFilter, RemoveEmptyPipe } from '@restroy/core';
 
 import { AppModule } from './app.module';
 

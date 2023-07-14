@@ -2,7 +2,7 @@ import {
   IsJSON, IsNotEmpty, IsString, Length, Matches, Validate,
 } from 'class-validator';
 
-import regex from '../../regex';
+import regex from '../../common/regex';
 import { PipelineStructureConstraint } from '../validators';
 
 export default class PipelineCreateInputDto {

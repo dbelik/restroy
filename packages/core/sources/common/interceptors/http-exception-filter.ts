@@ -3,7 +3,7 @@ import {
 } from '@nestjs/common';
 import { FastifyReply } from 'fastify';
 
-type HttpExceptionResponse = {
+export type HttpExceptionResponse = {
   property: string;
   value: unknown;
   constraints: object;
@@ -12,7 +12,7 @@ type HttpExceptionResponse = {
 
 @Catch(HttpException)
 export default class HttpExceptionFilter implements ExceptionFilter {
-  formatError(response: HttpExceptionResponse[]): HttpExceptionResponse[] {
+  private formatError(response: HttpExceptionResponse[]): HttpExceptionResponse[] {
     return response.map((error) => ({
       property: error.property,
       value: error.value,

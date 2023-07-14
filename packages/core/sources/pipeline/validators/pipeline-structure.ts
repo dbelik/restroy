@@ -3,7 +3,7 @@ import { ValidatorConstraint, ValidatorConstraintInterface } from 'class-validat
 
 @ValidatorConstraint({ name: 'PipelineStructure', async: false })
 export default class PipelineStructureConstraint implements ValidatorConstraintInterface {
-  hasStartNode(graph: Pipeline) {
+  private hasStartNode(graph: Pipeline) {
     const children = graph.nodeEdges('START');
     return graph.hasNode('START')
       && children
@@ -13,11 +13,11 @@ export default class PipelineStructureConstraint implements ValidatorConstraintI
       && !graph.isMultigraph();
   }
 
-  hasAtMostNodes(graph: Pipeline) {
+  private hasAtMostNodes(graph: Pipeline) {
     return graph.nodeCount() <= 32;
   }
 
-  passesOnlyNecessaryFields(pipeline: string) {
+  private passesOnlyNecessaryFields(pipeline: string) {
     const options = JSON.parse(pipeline) as object;
     return Object.keys(options).length === 2
       && Object.hasOwn(options, 'nodes')
