@@ -1,4 +1,4 @@
-import { PipelineClient } from '@restroy/clients';
+import { PipelineClient } from '@restroy/api-cllients';
 import { KafkaClientOptions, KafkaProducer } from '@restroy/kafka-client';
 import { scheduleJob } from 'node-schedule';
 

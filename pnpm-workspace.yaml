@@ -2,7 +2,7 @@ packages:
   - "packages/pipeline-utils"
   - "packages/config-utils"
   - "packages/kafka-client"
-  - "packages/clients"
+  - "packages/api-clients"
   - "packages/core"
   - "services/pipelines/scheduler"
   - "services/pipelines/runner"

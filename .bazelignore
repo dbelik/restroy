@@ -1,7 +1,7 @@
 node_modules
 packages/pipeline-utils/node_modules
 packages/kafka-client/node_modules
-packages/clients/node_modules
+packages/api-clients/node_modules
 packages/config-utils/node_modules
 packages/core/node_modules
 services/pipelines/runner/node_modules

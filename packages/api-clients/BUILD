@@ -46,9 +46,9 @@ ts_project(
 )
 
 npm_package(
-    name = "clients",
+    name = "api-clients",
     srcs = [":lib"],
-    package = "@restroy/clients",
+    package = "@restroy/api-cllients",
     visibility = ["//visibility:public"],
 )
 

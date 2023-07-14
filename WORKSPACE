@@ -126,7 +126,7 @@ packages = [
     "//packages/pipeline-utils:package.json",
     "//packages/config-utils:package.json",
     "//packages/kafka-client:package.json",
-    "//packages/clients:package.json",
+    "//packages/api-clients:package.json",
     "//packages/core:package.json",
     "//services/pipelines/runner:package.json",
     "//services/pipelines/scheduler:package.json",

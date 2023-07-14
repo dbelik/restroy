@@ -1,5 +1,5 @@
 {
-  "name": "@restroy/clients",
+  "name": "@restroy/api-cllients",
   "version": "0.0.1",
   "description": "Restroy clients for simplifying work with Restroy APIs",
   "keywords": [],
