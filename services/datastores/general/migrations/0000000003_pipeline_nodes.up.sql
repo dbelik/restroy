@@ -7,3 +7,7 @@ CREATE TABLE workspace_management.pipeline_nodes (
   FOREIGN KEY (pipeline_id) REFERENCES workspace_management.pipelines(id),
   FOREIGN KEY (plugin_id) REFERENCES workspace_management.plugins(id)
 );
+
+CREATE INDEX pipeline_nodes_pipeline_id
+  ON workspace_management.pipeline_nodes(pipeline_id)
+  WHERE pipeline_id IS NOT NULL; 

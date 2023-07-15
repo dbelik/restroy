@@ -1,4 +1,4 @@
-import { PipelineClient } from '@restroy/api-clients';
+import { PipelineClient, PipelineHistoryClient } from '@restroy/api-clients';
 import { KafkaClientOptions, KafkaProducer } from '@restroy/kafka-client';
 import { scheduleJob } from 'node-schedule';
 
@@ -12,8 +12,11 @@ class PipelineSchedulerServer {
 
   private pipelineHelper: PipelineHelper;
 
+  private pipelineHistoryClient: PipelineHistoryClient;
+
   constructor(kafkaConfig: KafkaClientOptions) {
     this.pipelineClient = new PipelineClient(config.api.general.url);
+    this.pipelineHistoryClient = new PipelineHistoryClient(config.api.general.url);
     this.producer = new KafkaProducer(kafkaConfig);
     this.pipelineHelper = new PipelineHelper();
   }
@@ -29,10 +32,6 @@ class PipelineSchedulerServer {
         // eslint-disable-next-line no-await-in-loop
         const result = await this.pipelineClient.getDuePipelines(date);
         const pipelines = result.data;
-        const pipelineData = this.pipelineHelper.mapPipelineModels(
-          pipelines,
-          config.pipelines.firstNodeId,
-        );
 
         morePipelines = result.meta.total > result.meta.limit;
         console.log(`Pipelines: ${pipelines.length}; Date: ${date.toISOString()}`);
@@ -43,8 +42,22 @@ class PipelineSchedulerServer {
 
         // eslint-disable-next-line no-await-in-loop
         await Promise.all([
-          pipelineData.map(async ({ id, children }) => {
-            const messages = this.pipelineHelper.mapChildrenToMessages(id, children);
+          pipelines.map(async ({ id }) => {
+            const historyRecord = await this.pipelineHistoryClient.createPipelineHistoryRecord(
+              id,
+              date.toISOString(),
+            );
+
+            const originalStructure = this.pipelineHelper.mapPipelineModel(
+              id,
+              historyRecord.original_settings,
+            );
+
+            const messages = this.pipelineHelper.mapChildrenToMessages(
+              historyRecord.id,
+              originalStructure.id,
+              originalStructure.children,
+            );
 
             console.log(`Sending ${messages.length} messages to Kafka`);
             console.log(`Messages: ${JSON.stringify(messages)}`);

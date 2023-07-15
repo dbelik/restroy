@@ -21,3 +21,7 @@ GRANT r_restroy_workspaces_read TO u_restroy_workspaces_read;
 CREATE USER u_restroy_workspaces_readwrite WITH PASSWORD 'password123';
 GRANT CONNECT ON DATABASE restroy TO u_restroy_workspaces_readwrite;
 GRANT r_restroy_workspaces_readwrite TO u_restroy_workspaces_readwrite;
+
+ALTER USER u_restroy_workspaces_read SET search_path TO workspace_management;
+ALTER USER u_restroy_workspaces_readwrite SET search_path TO workspace_management;
+ALTER USER restroy_admin SET search_path TO workspace_management;

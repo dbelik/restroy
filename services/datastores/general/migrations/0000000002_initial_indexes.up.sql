@@ -17,3 +17,7 @@ CREATE INDEX boards_users_board_id
 CREATE INDEX boards_users_user_id 
   ON workspace_management.boards_users(user_id)
   WHERE user_id IS NOT NULL;
+
+CREATE INDEX pipeline_history_pipeline_id
+  ON workspace_management.pipeline_history(pipeline_id)
+  WHERE pipeline_id IS NOT NULL;

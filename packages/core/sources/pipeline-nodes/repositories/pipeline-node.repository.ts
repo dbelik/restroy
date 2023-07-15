@@ -5,7 +5,20 @@ import { PipelineNodeCreateInputDto } from '../dtos';
 import { PipelineNodeModel } from '../models';
 
 @Injectable()
-export default class PipelineRepository {
+export default class PipelineNodeRepository {
+  async getPipelineNodes(
+    client: IRepositoryClient,
+    pipelineId: string,
+  ): Promise<PipelineNodeModel[]> {
+    const query = `
+      SELECT * FROM workspace_management.pipeline_nodes
+      WHERE pipeline_id = $1;
+    `;
+    const parameters = [pipelineId];
+    const result = await client.query<PipelineNodeModel>(query, parameters);
+    return result;
+  }
+
   async createPipelineNode(
     client: IRepositoryClient,
     pipelineId: string,

@@ -171,10 +171,10 @@ CREATE TYPE workspace_management.pipeline_status_enum AS ENUM (
 CREATE TABLE workspace_management.pipeline_history (
   id SERIAL PRIMARY KEY,
   pipeline_id BIGINT NOT NULL,
-  status workspace_management.pipeline_status_enum NOT NULL,
+  status workspace_management.pipeline_status_enum NOT NULL DEFAULT 'pending',
   original_settings JSONB NOT NULL DEFAULT '{}'::jsonb,
   started_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  ended_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  ended_at TIMESTAMP,
 
   FOREIGN KEY (pipeline_id) REFERENCES workspace_management.pipelines(id)
 );

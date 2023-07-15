@@ -47,4 +47,12 @@ export default class Pipeline extends Graph {
     const acyclic = isAcyclic as (pipeline: Pipeline) => boolean;
     return acyclic(pipeline);
   }
+
+  public static pipelineToString(pipeline: Pipeline): string {
+    return JSON.stringify(json.write(pipeline));
+  }
+
+  public static pipelineToObject(pipeline: Pipeline): object {
+    return json.write(pipeline);
+  }
 }

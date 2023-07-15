@@ -1,18 +1,21 @@
-import { PipelineClient } from '@restroy/api-clients';
+import { PipelineHistoryClient } from '@restroy/api-clients';
 import { Pipeline, PipelineNode } from '@restroy/pipeline-utils';
 
 import config from '../config';
 
 export default class PipelineHandler {
-  private pipelineClient: PipelineClient;
+  private pipelineHistoryClient: PipelineHistoryClient;
 
   constructor() {
-    this.pipelineClient = new PipelineClient(config.api.general.url);
+    this.pipelineHistoryClient = new PipelineHistoryClient(config.api.general.url);
   }
 
   async handleOneNode(node: PipelineNode) {
-    const pipeline = await this.pipelineClient.getPipeline(node.pipeline_id);
-    const structure = Pipeline.tryCreateFromJSON(pipeline.structure);
-    console.log(`Pipeline: ${JSON.stringify(pipeline.structure)}`);
+    const pipeline = await this.pipelineHistoryClient.getPipelineHistoryRecord(
+      node.node_id,
+      node.history_record_id,
+    );
+    const structure = Pipeline.tryCreateFromJSON(pipeline.original_settings);
+    console.log(`Pipeline: ${JSON.stringify(Pipeline.pipelineToString(structure))}`);
   }
 }

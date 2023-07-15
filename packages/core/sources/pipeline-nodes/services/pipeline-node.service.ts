@@ -12,6 +12,10 @@ export default class PipelineNodeService {
     @Inject('DATABASE_POSTGRES') private readonly databaseClient: DatabaseClient,
   ) {}
 
+  async getPipelineNodes(pipelineId: string): Promise<PipelineNodeModel[]> {
+    return this.pipelineRepository.getPipelineNodes(this.databaseClient, pipelineId);
+  }
+
   async createPipelineNode(
     pipelineId: string,
     data: PipelineNodeCreateInputDto,

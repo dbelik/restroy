@@ -1,10 +1,12 @@
 INSERT INTO workspace_management.plans(
 	id, name, description, price, features, created_at, updated_at, deactivated_at, deleted_at)
-	VALUES (1, 'Basic', 'Basic features', 0, '{}', '2020-12-12', '2020-12-12', null, null);
+	VALUES (1, 'Basic', 'Basic features', 0, '{}', '2020-12-12', '2020-12-12', null, null)
+  ON CONFLICT DO NOTHING;
 
 INSERT INTO workspace_management.users(
 	id, first_name, last_name, about, email, email_validated, password, purpose, features_seen, last_login, timezone, deactivated_at, deleted_at)
-	VALUES (1, 'Restroy', 'Bot', 'Restroy Bot', 'bot@restroy.com', true, '', 'personal', '{}', null, 'UTC', null, null);
+	VALUES (1, 'Restroy', 'Bot', 'Restroy Bot', 'bot@restroy.com', true, '', 'personal', '{}', null, 'UTC', null, null)
+  ON CONFLICT DO NOTHING;
 
 INSERT INTO workspace_management.teams(
 	id, name, description, 
@@ -17,7 +19,8 @@ INSERT INTO workspace_management.teams(
 		1, 'Restroy Team', 'Restroy Team', 
 		1, 1, null, 
 		0, null, 0, 
-		'yearly', null, '{}', '2020-12-12', '2020-12-12', null, null);
+		'yearly', null, '{}', '2020-12-12', '2020-12-12', null, null)
+  ON CONFLICT DO NOTHING;
 
 INSERT INTO workspace_management.boards(
 	id, name, description, team_id, owner_id, created_at, updated_at, deactivated_at, deleted_at)
@@ -25,7 +28,8 @@ INSERT INTO workspace_management.boards(
 		1, 'Restroy Board', 'Restroy Board',
 		1, 1, '2020-12-12',
 		'2020-12-12', null, null
-	);
+	)
+  ON CONFLICT DO NOTHING;
 
 INSERT INTO workspace_management.plugins(
   id, name, description, settings, code, 
@@ -34,4 +38,5 @@ INSERT INTO workspace_management.plugins(
     1, 'Hello World', 'Plugin to print hello world to the console',
     '{ "language": "Javascript" }', 'console.log("Hello World")',
     1
-);
+)
+  ON CONFLICT DO NOTHING;
