@@ -1,4 +1,4 @@
-import { PipelineClient } from '@restroy/api-cllients';
+import { PipelineClient } from '@restroy/api-clients';
 import { KafkaClientOptions, KafkaProducer } from '@restroy/kafka-client';
 import { scheduleJob } from 'node-schedule';
 
@@ -36,6 +36,10 @@ class PipelineSchedulerServer {
 
         morePipelines = result.meta.total > result.meta.limit;
         console.log(`Pipelines: ${pipelines.length}; Date: ${date.toISOString()}`);
+
+        if (result.meta.total === 0) {
+          break;
+        }
 
         // eslint-disable-next-line no-await-in-loop
         await Promise.all([

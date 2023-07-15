@@ -10,7 +10,39 @@ describe('PipelineCreateInputDto class', () => {
       name: 'test',
       description: 'test',
       board_id: 'test',
-      structure: '{"nodes":[{"v":"START"},{"v":"11"},{"v":"10"}],"edges":[{"v":"START","w":"11"},{"v":"START","w":"10"}]}',
+      structure: {
+        nodes: [
+          {
+            v: 'START',
+          },
+          {
+            v: '11',
+            value: {
+              plugin: {
+                id: '1',
+              },
+            },
+          },
+          {
+            v: '10',
+            value: {
+              plugin: {
+                id: '1',
+              },
+            },
+          },
+        ],
+        edges: [
+          {
+            v: 'START',
+            w: '11',
+          },
+          {
+            v: 'START',
+            w: '10',
+          },
+        ],
+      },
     };
     const dto = plainToInstance(PipelineCreateInputDto, pipeline);
     const errors = await validate(dto);
@@ -24,21 +56,39 @@ describe('PipelineCreateInputDto class', () => {
       interval: 'every 5 mins I guess',
       name: 'test',
       description: 'test',
-      structure: '{"nodes":[{"v":"START"},{"v":"11"},{"v":"10"}],"edges":[{"v":"START","w":"11"},{"v":"START","w":"10"}]}',
-    };
-    const dto = plainToInstance(PipelineCreateInputDto, pipeline);
-    const errors = await validate(dto);
-
-    expect(errors.length).toBe(1);
-  });
-
-  it('should throw error when structure has invalid format', async () => {
-    const pipeline = {
-      board_id: 'test',
-      interval: '* * * * *',
-      name: 'test',
-      description: 'test',
-      structure: 'Hey there!',
+      structure: {
+        nodes: [
+          {
+            v: 'START',
+          },
+          {
+            v: '11',
+            value: {
+              plugin: {
+                id: '1',
+              },
+            },
+          },
+          {
+            v: '10',
+            value: {
+              plugin: {
+                id: '1',
+              },
+            },
+          },
+        ],
+        edges: [
+          {
+            v: 'START',
+            w: '11',
+          },
+          {
+            v: 'START',
+            w: '10',
+          },
+        ],
+      },
     };
     const dto = plainToInstance(PipelineCreateInputDto, pipeline);
     const errors = await validate(dto);
@@ -53,7 +103,7 @@ describe('PipelineCreateInputDto class', () => {
     const dto = plainToInstance(PipelineCreateInputDto, pipeline);
     const errors = await validate(dto);
 
-    expect(errors.length).toBe(5);
+    expect(errors.length).toBe(4);
   });
 
   it('should throw error when passing too large string fields', async () => {
@@ -62,7 +112,43 @@ describe('PipelineCreateInputDto class', () => {
       description: 'a'.repeat(4000),
       interval: '5/* * * * *',
       board_id: 'a'.repeat(256),
-      structure: '{"nodes":[{"v":"START"},{"v":"11"},{"v":"10"}],"edges":[{"v":"START","w":"11"},{"v":"START","w":"10"}]}',
+      structure: {
+        nodes: [
+          {
+            v: 'START',
+          },
+          {
+            v: '11',
+            value: {
+              settings: {
+                API_KEY: 'example',
+                API_SECRET: 'example2',
+              },
+              plugin: {
+                id: '1',
+              },
+            },
+          },
+          {
+            v: '10',
+            value: {
+              plugin: {
+                id: '1',
+              },
+            },
+          },
+        ],
+        edges: [
+          {
+            v: 'START',
+            w: '11',
+          },
+          {
+            v: 'START',
+            w: '10',
+          },
+        ],
+      },
     };
     const dto = plainToInstance(PipelineCreateInputDto, pipeline);
     const errors = await validate(dto);

@@ -13,7 +13,8 @@
     "@restroy/pipeline-utils": "workspace:*",
     "@restroy/kafka-client": "workspace:*",
     "@restroy/config-utils": "workspace:*",
-    "@restroy/api-cllients": "workspace:*"
+    "@restroy/core": "workspace:*",
+    "@restroy/api-clients": "workspace:*"
   },
   "packageManager": "pnpm@8.5.1",
   "engines": {

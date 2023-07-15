@@ -2,12 +2,16 @@ import { KafkaClientOptions, KafkaConsumer } from '@restroy/kafka-client';
 import { PipelineNode } from '@restroy/pipeline-utils';
 
 import config from './config';
+import PipelineHandler from './handlers/pipeline-handler';
 
 class PipelineRunnerServer {
   protected consumer: KafkaConsumer;
 
+  protected pipelineHandler: PipelineHandler;
+
   constructor(kafkaConfig: KafkaClientOptions) {
     this.consumer = new KafkaConsumer(kafkaConfig);
+    this.pipelineHandler = new PipelineHandler();
   }
 
   async init() {
@@ -15,8 +19,8 @@ class PipelineRunnerServer {
     await this.consumer.subscribe(config.pipelines.topic, {
       message: async (payload) => {
         const pipelineString = payload.message.value.toString();
-        const pipeline = JSON.parse(pipelineString) as PipelineNode;
-        console.log(`Pipeline ID: ${pipeline.pipeline_id}, Node ID: ${pipeline.node_id}`);
+        const node = JSON.parse(pipelineString) as PipelineNode;
+        await this.pipelineHandler.handleOneNode(node);
       },
     });
   }

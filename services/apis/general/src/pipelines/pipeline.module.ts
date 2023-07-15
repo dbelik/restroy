@@ -7,4 +7,4 @@ import PipelineController from './pipeline.controller';
   providers: [PipelineService, PipelineRepository, CronService],
   controllers: [PipelineController],
 })
-export class PipelineModule {}
+export default class PipelineModule {}

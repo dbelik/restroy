@@ -172,12 +172,9 @@ CREATE TABLE workspace_management.pipeline_history (
   id SERIAL PRIMARY KEY,
   pipeline_id BIGINT NOT NULL,
   status workspace_management.pipeline_status_enum NOT NULL,
+  original_settings JSONB NOT NULL DEFAULT '{}'::jsonb,
   started_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   ended_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  deactivated_at TIMESTAMP,
-  deleted_at TIMESTAMP,
 
   FOREIGN KEY (pipeline_id) REFERENCES workspace_management.pipelines(id)
 );
@@ -186,11 +183,13 @@ CREATE TABLE workspace_management.plugins (
   id SERIAL PRIMARY KEY,
   name VARCHAR(255) NOT NULL UNIQUE,
   description TEXT NOT NULL,
-  tags VARCHAR(31)[] NOT NULL,
+  tags VARCHAR(31)[] NOT NULL DEFAULT array[]::varchar[],
   settings JSONB NOT NULL DEFAULT '{}'::jsonb,
+  code TEXT NOT NULL,
   creator_id BIGINT NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  deleted_at TIMESTAMP,
 
   FOREIGN KEY (creator_id) REFERENCES workspace_management.users(id)
 );

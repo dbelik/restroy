@@ -9,7 +9,7 @@ export default class PipelineModel {
 
   next_date: string;
 
-  structure: string;
+  structure: object;
 
   executed_times: number;
 

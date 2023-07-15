@@ -19,9 +19,16 @@ export default class Pipeline extends Graph {
     }
   }
 
-  public static tryCreateFromJSON(encoded: object): Pipeline | null {
+  public static tryCreateFromJSON(encoded: object, options?: object): Pipeline | null {
     try {
-      const graph = json.read(encoded);
+      const graph = json.read({
+        ...encoded,
+        options: options ?? {
+          directed: true,
+          multigraph: false,
+          compound: false,
+        },
+      });
       return graph;
     } catch {
       return null;
@@ -29,7 +36,7 @@ export default class Pipeline extends Graph {
   }
 
   public static getEdgesNames(pipeline: Pipeline | null, v: string): string[] {
-    const edges = pipeline?.nodeEdges(v);
+    const edges = pipeline?.outEdges(v);
     if (!edges) {
       return [];
     }

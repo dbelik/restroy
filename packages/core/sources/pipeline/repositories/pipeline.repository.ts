@@ -4,8 +4,10 @@ import { CronService, SearchInputDto } from '../../common';
 import { IRepositoryClient, SearchRepository } from '../../common/repositories';
 import { PipelineModel } from '../models';
 
-export type PipelineUpdateInput = Partial<Pick<PipelineModel, 'name' | 'description' | 'interval' | 'next_date' | 'board_id' | 'structure' | 'deactivated_at'>>;
-export type PipelineCreateInput = Pick<PipelineModel, 'name' | 'description' | 'interval' | 'board_id' | 'structure'>;
+export type PipelineUpdateInput = Partial<Pick<PipelineModel, 'name' | 'description' | 'interval' | 'next_date' | 'board_id' | 'deactivated_at'> & {
+  structure: string;
+}>;
+export type PipelineCreateInput = Pick<PipelineModel, 'name' | 'description' | 'interval' | 'board_id'>;
 
 @Injectable()
 export default class PipelineRepository extends SearchRepository<PipelineModel> {
@@ -70,7 +72,8 @@ export default class PipelineRepository extends SearchRepository<PipelineModel> 
 
     const parameters = [
       data.name, data.description, data.interval,
-      new Date(0).toISOString(), data.board_id, data.structure,
+      new Date(0).toISOString(), data.board_id,
+      '{"nodes":[{ "v": "START" }],"edges":[]}',
     ];
 
     const result = await client.query<PipelineModel>(query, parameters);

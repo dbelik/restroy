@@ -7,6 +7,11 @@ export default class PipelineClient extends HttpClient {
     super(baseURL);
   }
 
+  public async getPipeline(id: string): Promise<PipelineModel> {
+    const result = await this.sendRequest<PipelineModel>('GET', `/pipelines/${id}`);
+    return result.data;
+  }
+
   public async getDuePipelines(date: Date): Promise<SearchResult<PipelineModel>> {
     const result = await this.sendRequest<SearchResult<PipelineModel>>('PATCH', '/pipelines/due', { next_date: date });
     return result.data;

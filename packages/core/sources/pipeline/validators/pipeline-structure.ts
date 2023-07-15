@@ -3,36 +3,26 @@ import { ValidatorConstraint, ValidatorConstraintInterface } from 'class-validat
 
 @ValidatorConstraint({ name: 'PipelineStructure', async: false })
 export default class PipelineStructureConstraint implements ValidatorConstraintInterface {
-  private hasStartNode(graph: Pipeline) {
-    const children = graph.nodeEdges('START');
-    return graph.hasNode('START')
-      && children
-      && children.length > 0
-      && graph.isDirected()
-      && Pipeline.checkAcyclic(graph)
-      && !graph.isMultigraph();
+  private atLeastOneValue(graph: Pipeline) {
+    return graph.nodes().every((node) => {
+      const nodeValue = graph.node(node) as object;
+      return nodeValue && Object.keys(nodeValue).length > 0;
+    });
   }
 
-  private hasAtMostNodes(graph: Pipeline) {
-    return graph.nodeCount() <= 32;
-  }
-
-  private passesOnlyNecessaryFields(pipeline: string) {
-    const options = JSON.parse(pipeline) as object;
-    return Object.keys(options).length === 2
-      && Object.hasOwn(options, 'nodes')
-      && Object.hasOwn(options, 'edges');
-  }
-
-  validate(pipeline: string) {
-    const graph = Pipeline.tryCreateFromString(pipeline);
-    if (!graph) {
+  validate(pipeline: object) {
+    const structure = Pipeline.tryCreateFromJSON(pipeline);
+    if (!structure) {
       return false;
     }
 
-    return this.hasAtMostNodes(graph)
-      && this.passesOnlyNecessaryFields(pipeline)
-      && this.hasStartNode(graph);
+    const children = structure.nodeEdges('START');
+    return structure.hasNode('START')
+      && children
+      && children?.length > 0
+      && structure.isDirected()
+      && Pipeline.checkAcyclic(structure)
+      && !structure.isMultigraph();
   }
 
   defaultMessage() {

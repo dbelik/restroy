@@ -3,8 +3,8 @@ INSERT INTO workspace_management.plans(
 	VALUES (1, 'Basic', 'Basic features', 0, '{}', '2020-12-12', '2020-12-12', null, null);
 
 INSERT INTO workspace_management.users(
-	id, first_name, last_name, about, email, email_validated, password, purpose, features_seen, last_login, timezone, created_at, updated_at, deactivated_at, deleted_at)
-	VALUES (1, 'Restroy', 'Admin', 'Admin Example', 'admin@restroy.com', true, 'tmp', 'personal', '{}', null, 'UTC', '2020-12-12', '2020-12-12', null, null);
+	id, first_name, last_name, about, email, email_validated, password, purpose, features_seen, last_login, timezone, deactivated_at, deleted_at)
+	VALUES (1, 'Restroy', 'Bot', 'Restroy Bot', 'bot@restroy.com', true, '', 'personal', '{}', null, 'UTC', null, null);
 
 INSERT INTO workspace_management.teams(
 	id, name, description, 
@@ -26,3 +26,12 @@ INSERT INTO workspace_management.boards(
 		1, 1, '2020-12-12',
 		'2020-12-12', null, null
 	);
+
+INSERT INTO workspace_management.plugins(
+  id, name, description, settings, code, 
+  creator_id
+) VALUES (
+    1, 'Hello World', 'Plugin to print hello world to the console',
+    '{ "language": "Javascript" }', 'console.log("Hello World")',
+    1
+);

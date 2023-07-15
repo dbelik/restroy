@@ -23,4 +23,4 @@ const databaseProvider = {
   providers: [databaseProvider],
   exports: [databaseProvider],
 })
-export class DatabaseModule {}
+export default class DatabaseModule {}

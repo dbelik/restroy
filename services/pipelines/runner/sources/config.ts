@@ -23,4 +23,10 @@ export default {
   pipelines: {
     topic: config.get('PIPELINE_RUNNER__PIPELINES__TOPIC', 'pipelines'),
   },
+
+  api: {
+    general: {
+      url: config.get('PIPELINE_SCHEDULER__API__GENERAL__URL', 'http://localhost:3000'),
+    },
+  },
 };

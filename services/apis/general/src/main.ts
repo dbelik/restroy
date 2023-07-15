@@ -10,6 +10,7 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalPipes(new ValidationPipe({
     transform: true,
+    whitelist: true,
     forbidUnknownValues: false,
     exceptionFactory: (errors) => new HttpException(errors, HttpStatus.FORBIDDEN),
   }));
@@ -17,4 +18,4 @@ async function bootstrap() {
   await app.listen(3000);
 }
 
-bootstrap().catch(console.error);
+bootstrap().catch((error) => { throw error; });

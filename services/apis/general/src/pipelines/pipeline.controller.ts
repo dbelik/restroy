@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import {
   AtLeastOnePipe,
-  PipelineAdvanceNextDate,
+  PipelineAdvanceNextDateInputDto,
   PipelineCreateInputDto, PipelineModel, PipelineService,
   PipelineUpdateInputDto, SearchInputDto, SearchResult,
 } from '@restroy/core';
@@ -46,7 +46,7 @@ export default class PipelineController {
   @Patch('/due')
   public async updateAndReturnDuePipelines(
     @Req() request: Request,
-      @Body() body: PipelineAdvanceNextDate,
+      @Body() body: PipelineAdvanceNextDateInputDto,
   ): Promise<SearchResult<PipelineModel>> {
     return this.pipelineService.advanceNextDate(body.next_date);
   }

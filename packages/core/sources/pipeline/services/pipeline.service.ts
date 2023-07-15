@@ -6,7 +6,7 @@ import { DatabaseClient, SearchInputDto, SearchResult } from '../../common';
 import { FilterOperatorsEnum } from '../../common/dtos/filter-input.dto';
 import { PipelineCreateInputDto, PipelineUpdateInputDto } from '../dtos';
 import { PipelineModel } from '../models';
-import PipelineRepository, { PipelineUpdateInput } from './pipeline.repository';
+import PipelineRepository, { PipelineUpdateInput } from '../repositories/pipeline.repository';
 
 @Injectable()
 export default class PipelineService {
@@ -52,10 +52,13 @@ export default class PipelineService {
   }
 
   async updatePipeline(id: PipelineModel['id'], data: PipelineUpdateInputDto): Promise<PipelineModel> {
-    const { disabled, ...pipelineData } = data;
+    const { disabled, structure, ...pipelineData } = data;
     const pipeline: PipelineUpdateInput = {
       ...pipelineData,
     };
+    if (structure) {
+      pipeline.structure = JSON.stringify(structure);
+    }
     if (disabled) {
       pipeline.deactivated_at = new Date().toISOString();
     }

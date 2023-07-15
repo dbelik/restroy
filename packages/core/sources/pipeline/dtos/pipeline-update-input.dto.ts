@@ -1,11 +1,11 @@
+import { plainToInstance, Transform } from 'class-transformer';
 import {
-  IsBoolean,
-  IsJSON,
-  IsNotEmpty, IsOptional, IsString, Length, Matches, Validate,
+  IsBoolean, IsObject, IsOptional, IsString, Length, Matches, Validate, ValidateNested,
 } from 'class-validator';
 
-import regex from '../../common/regex';
+import { Regex } from '../../common';
 import { PipelineStructureConstraint } from '../validators';
+import PipelineStructureInputDto from './pipeline-structure-input.dto';
 
 export default class PipelineUpdateInputDto {
   @IsString()
@@ -20,15 +20,17 @@ export default class PipelineUpdateInputDto {
 
   @IsString()
   @IsOptional()
-  @Matches(regex.cron)
+  @Matches(Regex.cron)
   readonly interval?: string;
 
-  @IsJSON()
-  @IsString()
-  @IsNotEmpty()
+  @ValidateNested()
+  @Transform(
+    ({ value }) => plainToInstance(PipelineStructureInputDto, value),
+  )
+  @IsObject()
   @Validate(PipelineStructureConstraint)
   @IsOptional()
-  readonly structure?: string;
+  readonly structure?: PipelineStructureInputDto;
 
   // @TODO: Add validation that searches for a board with the given id
   @IsOptional()
