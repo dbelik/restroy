@@ -4,6 +4,10 @@ import { IRepositoryClient } from '../../common';
 import { PipelineCreateHistoryRecordInputDto } from '../dtos';
 import { PipelineHistoryModel } from '../models';
 
+export type PipelineHistoryRecordInput = Pick<PipelineHistoryModel, 'status' | 'finished_at'> & {
+  original_structure?: string;
+};
+
 @Injectable()
 export default class PipelinesRepository {
   async getPipelineHistoryRecord(
@@ -38,18 +42,21 @@ export default class PipelinesRepository {
     return result[0];
   }
 
-  async updatePipelineHistoryRecordStructure(
+  async updatePipelineHistoryRecord(
     client: IRepositoryClient,
     id: string,
-    structure: string,
+    data: PipelineHistoryRecordInput,
   ): Promise<PipelineHistoryModel> {
-    const query = `
-      UPDATE workspace_management.pipeline_history
-      SET original_structure = $1
-      WHERE id = $2
-      RETURNING *;
-    `;
-    const parameters = [structure, id];
+    let query = 'UPDATE workspace_management.pipeline_history SET ';
+    const parameters: string[] = [];
+    Object.entries(data).forEach(([key, value], index, array) => {
+      parameters.push(value);
+      query += `${key} = $${index + 1}`;
+      query += index === array.length - 1 ? ' ' : ', ';
+    });
+    query += `WHERE id = $${parameters.length + 1} RETURNING *;`;
+    parameters.push(id);
+
     const result = await client.query<PipelineHistoryModel>(query, parameters);
     return result[0];
   }

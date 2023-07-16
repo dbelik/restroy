@@ -13,15 +13,9 @@ describe('PipelineUpdateInputDto class', () => {
           },
           {
             v: '11',
-            value: {
-              node_id: '2',
-            },
           },
           {
             v: '10',
-            value: {
-              node_id: '2',
-            },
           },
         ],
         edges: [

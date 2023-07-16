@@ -1,13 +1,15 @@
+import { PipelineStatusEnum } from '../../pipelines/dtos';
+
 export default class PipelineHistoryModel {
   id: string;
 
   pipeline_id: string;
 
-  status: string;
+  status: PipelineStatusEnum;
 
   original_structure: object;
 
   started_at: string;
 
-  ended_at?: string;
+  finished_at?: string;
 }

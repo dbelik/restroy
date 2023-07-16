@@ -174,7 +174,7 @@ CREATE TABLE workspace_management.pipeline_history (
   status workspace_management.pipeline_status_enum NOT NULL DEFAULT 'pending',
   original_structure JSONB NOT NULL DEFAULT '{}'::jsonb,
   started_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  ended_at TIMESTAMP,
+  finished_at TIMESTAMP,
 
   FOREIGN KEY (pipeline_id) REFERENCES workspace_management.pipelines(id)
 );

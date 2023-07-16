@@ -5,6 +5,7 @@ import { Pipeline } from '@restroy/pipeline-utils';
 
 import { DatabaseClient } from '../../common';
 import { PipelineNodeService } from '../../pipeline-nodes';
+import { PipelineStatusEnum } from '../../pipelines/dtos';
 import { PipelinesService } from '../../pipelines/services';
 import { PipelineCreateHistoryRecordInputDto, PipelineUpdateHistoryRecordInputDto } from '../dtos';
 import { PipelineHistoryHelper } from '../helpers';
@@ -61,10 +62,15 @@ export default class PipelineHistoryService {
       Pipeline.tryCreateFromJSON(historyRecord.original_structure),
       data.structure,
     );
-    return this.pipelineHistoryRepository.updatePipelineHistoryRecordStructure(
+    const status = this.pipelineHistoryHelper.chooseHistoryRecordStatusFromStructure(newStructure);
+    return this.pipelineHistoryRepository.updatePipelineHistoryRecord(
       this.databaseClient,
       historyRecordId,
-      Pipeline.pipelineToString(newStructure),
+      {
+        original_structure: Pipeline.pipelineToString(newStructure),
+        status,
+        finished_at: status === PipelineStatusEnum.SUCCESS ? new Date().toISOString() : null,
+      },
     );
   }
 }

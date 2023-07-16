@@ -59,4 +59,210 @@ describe('PipelineHistoryHelper class', () => {
       );
     });
   });
+
+  describe('chooseHistoryRecordStatusFromStructure method', () => {
+    it('should return success if all nodes are success', () => {
+      const pipeline = Pipeline.tryCreateFromJSON({
+        nodes: [
+          { v: 'START' },
+          {
+            v: '1',
+            value: {
+              status: 'success',
+            },
+          },
+          {
+            v: '2',
+            value: {
+              status: 'success',
+            },
+          },
+        ],
+        edges: [
+          {
+            v: 'START',
+            w: '1',
+          },
+          {
+            v: '1',
+            w: '2',
+          },
+        ],
+      });
+
+      const result = pipelineHistoryHelper.chooseHistoryRecordStatusFromStructure(pipeline);
+
+      expect(result).toEqual('success');
+    });
+
+    it('should return failed if some nodes are failed', () => {
+      const pipeline = Pipeline.tryCreateFromJSON({
+        nodes: [
+          { v: 'START' },
+          {
+            v: '1',
+            value: {
+              status: 'success',
+            },
+          },
+          {
+            v: '2',
+            value: {
+              status: 'failed',
+            },
+          },
+        ],
+        edges: [
+          {
+            v: 'START',
+            w: '1',
+          },
+          {
+            v: '1',
+            w: '2',
+          },
+        ],
+      });
+
+      const result = pipelineHistoryHelper.chooseHistoryRecordStatusFromStructure(pipeline);
+
+      expect(result).toEqual('failed');
+    });
+
+    it('should return paused if some nodes are paused', () => {
+      const pipeline = Pipeline.tryCreateFromJSON({
+        nodes: [
+          { v: 'START' },
+          {
+            v: '1',
+            value: {
+              status: 'success',
+            },
+          },
+          {
+            v: '2',
+            value: {
+              status: 'paused',
+            },
+          },
+        ],
+        edges: [
+          {
+            v: 'START',
+            w: '1',
+          },
+          {
+            v: '1',
+            w: '2',
+          },
+        ],
+      });
+
+      const result = pipelineHistoryHelper.chooseHistoryRecordStatusFromStructure(pipeline);
+
+      expect(result).toEqual('paused');
+    });
+
+    it('should return running if some nodes are running', () => {
+      const pipeline = Pipeline.tryCreateFromJSON({
+        nodes: [
+          { v: 'START' },
+          {
+            v: '1',
+            value: {
+              status: 'success',
+            },
+          },
+          {
+            v: '2',
+            value: {
+              status: 'running',
+            },
+          },
+        ],
+        edges: [
+          {
+            v: 'START',
+            w: '1',
+          },
+          {
+            v: '1',
+            w: '2',
+          },
+        ],
+      });
+
+      const result = pipelineHistoryHelper.chooseHistoryRecordStatusFromStructure(pipeline);
+
+      expect(result).toEqual('running');
+    });
+
+    it('should return pending when some nodes are succeeded, but other have pending state', () => {
+      const pipeline = Pipeline.tryCreateFromJSON({
+        nodes: [
+          { v: 'START' },
+          {
+            v: '1',
+            value: {
+              status: 'success',
+            },
+          },
+          {
+            v: '2',
+            value: {
+              status: 'pending',
+            },
+          },
+        ],
+        edges: [
+          {
+            v: 'START',
+            w: '1',
+          },
+          {
+            v: '1',
+            w: '2',
+          },
+        ],
+      });
+
+      const result = pipelineHistoryHelper.chooseHistoryRecordStatusFromStructure(pipeline);
+
+      expect(result).toEqual('pending');
+    });
+
+    it('should return pending if all nodes are pending', () => {
+      const pipeline = Pipeline.tryCreateFromJSON({
+        nodes: [
+          { v: 'START' },
+          {
+            v: '1',
+            value: {
+              status: 'pending',
+            },
+          },
+          {
+            v: '2',
+            value: {
+              status: 'pending',
+            },
+          },
+        ],
+        edges: [
+          {
+            v: 'START',
+            w: '1',
+          },
+          {
+            v: '1',
+            w: '2',
+          },
+        ],
+      });
+
+      const result = pipelineHistoryHelper.chooseHistoryRecordStatusFromStructure(pipeline);
+
+      expect(result).toEqual('pending');
+    });
+  });
 });

@@ -2,6 +2,8 @@ import { PipelineHistoryClient, PluginsClient } from '@restroy/api-clients';
 import {
   PipelineHistoryModel, PipelineHistoryNodeModel,
   PipelineMessageNodeModel,
+  PipelineStatusEnum,
+  PipelineUpdateHistoryRecordInputDto,
 } from '@restroy/core';
 import { Pipeline } from '@restroy/pipeline-utils';
 
@@ -30,12 +32,15 @@ export default class PipelineHandler {
     const nodeData = structure.node(node.node_id) as PipelineHistoryNodeModel;
     const plugin = await this.pluginsClient.getPlugin(nodeData.plugin_id);
     const pluginResult = await this.pluginRunner.run(plugin, {});
-    const data = {
+    const data: PipelineUpdateHistoryRecordInputDto = {
       structure: {
         nodes: [{
           v: node.node_id,
           value: {
-            status: pluginResult.result.success ? 'success' : 'failed',
+            status:
+              pluginResult.result.success
+                ? PipelineStatusEnum.SUCCESS
+                : PipelineStatusEnum.FAILED,
             finished_at: pluginResult.endedAt,
             started_at: pluginResult.startedAt,
           },

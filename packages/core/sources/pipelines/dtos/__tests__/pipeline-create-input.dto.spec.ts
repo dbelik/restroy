@@ -10,39 +10,6 @@ describe('PipelineCreateInputDto class', () => {
       name: 'test',
       description: 'test',
       board_id: 'test',
-      structure: {
-        nodes: [
-          {
-            v: 'START',
-          },
-          {
-            v: '11',
-            value: {
-              plugin: {
-                id: '1',
-              },
-            },
-          },
-          {
-            v: '10',
-            value: {
-              plugin: {
-                id: '1',
-              },
-            },
-          },
-        ],
-        edges: [
-          {
-            v: 'START',
-            w: '11',
-          },
-          {
-            v: 'START',
-            w: '10',
-          },
-        ],
-      },
     };
     const dto = plainToInstance(PipelineCreateInputDto, pipeline);
     const errors = await validate(dto);
@@ -56,39 +23,6 @@ describe('PipelineCreateInputDto class', () => {
       interval: 'every 5 mins I guess',
       name: 'test',
       description: 'test',
-      structure: {
-        nodes: [
-          {
-            v: 'START',
-          },
-          {
-            v: '11',
-            value: {
-              plugin: {
-                id: '1',
-              },
-            },
-          },
-          {
-            v: '10',
-            value: {
-              plugin: {
-                id: '1',
-              },
-            },
-          },
-        ],
-        edges: [
-          {
-            v: 'START',
-            w: '11',
-          },
-          {
-            v: 'START',
-            w: '10',
-          },
-        ],
-      },
     };
     const dto = plainToInstance(PipelineCreateInputDto, pipeline);
     const errors = await validate(dto);
@@ -112,43 +46,6 @@ describe('PipelineCreateInputDto class', () => {
       description: 'a'.repeat(4000),
       interval: '5/* * * * *',
       board_id: 'a'.repeat(256),
-      structure: {
-        nodes: [
-          {
-            v: 'START',
-          },
-          {
-            v: '11',
-            value: {
-              settings: {
-                API_KEY: 'example',
-                API_SECRET: 'example2',
-              },
-              plugin: {
-                id: '1',
-              },
-            },
-          },
-          {
-            v: '10',
-            value: {
-              plugin: {
-                id: '1',
-              },
-            },
-          },
-        ],
-        edges: [
-          {
-            v: 'START',
-            w: '11',
-          },
-          {
-            v: 'START',
-            w: '10',
-          },
-        ],
-      },
     };
     const dto = plainToInstance(PipelineCreateInputDto, pipeline);
     const errors = await validate(dto);

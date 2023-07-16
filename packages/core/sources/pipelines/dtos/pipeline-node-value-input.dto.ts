@@ -1,12 +1,20 @@
 import {
-  IsDateString, IsOptional, IsString, Length,
+  IsDateString, IsEnum, IsOptional, IsString, Length,
 } from 'class-validator';
 
+export enum PipelineStatusEnum {
+  PENDING = 'pending',
+  RUNNING = 'running',
+  PAUSED = 'paused',
+  FAILED = 'failed',
+  SUCCESS = 'success',
+}
+
 export default class PipelineNodeWithValueInputDto {
-  @IsString()
+  @IsEnum(PipelineStatusEnum)
   @IsOptional()
   @Length(1, 255)
-  readonly status: string;
+  readonly status: PipelineStatusEnum;
 
   @IsString()
   @IsOptional()
