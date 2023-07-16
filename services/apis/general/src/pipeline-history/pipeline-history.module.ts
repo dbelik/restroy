@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import {
   CronService,
-  PipelineNodeRepository, PipelineNodeService, PipelineRepository, PipelineService,
+  PipelineHistoryHelper,
+  PipelineHistoryRepository, PipelineHistoryService,
+  PipelineNodeRepository, PipelineNodeService, PipelinesRepository, PipelinesService,
 } from '@restroy/core';
-import { PipelineHistoryRepository, PipelineHistoryService } from '@restroy/core/sources/pipeline-history';
-import { PipelineHistoryHelper } from '@restroy/core/sources/pipeline-history/helpers';
 
 import PipelineHistoryController from './pipeline-history.controller';
 
@@ -12,8 +12,8 @@ import PipelineHistoryController from './pipeline-history.controller';
   providers: [
     PipelineNodeService,
     PipelineNodeRepository,
-    PipelineService,
-    PipelineRepository,
+    PipelinesService,
+    PipelinesRepository,
     PipelineHistoryHelper,
     PipelineHistoryService,
     CronService,

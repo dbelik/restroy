@@ -5,7 +5,7 @@ export default class PipelineHistoryModel {
 
   status: string;
 
-  original_settings: object;
+  original_structure: object;
 
   started_at: string;
 

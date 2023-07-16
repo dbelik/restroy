@@ -1,9 +1,9 @@
 export default class PipelineHistoryNode {
   status: string;
 
-  startedAt?: string;
+  started_at?: string;
 
-  finishedAt?: string;
+  finished_at?: string;
 
   plugin_id: string;
 }

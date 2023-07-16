@@ -5,6 +5,7 @@ load("@bazel_skylib//rules:build_test.bzl", "build_test")
 load("@npm//:defs.bzl", "npm_link_all_packages")
 load("@npm_prod//:defs.bzl", npm_link_all_prod_packages = "npm_link_all_packages")
 load("@npm//:@commitlint/cli/package_json.bzl", commitlint_bin = "bin")
+load("@npm//:license-checker/package_json.bzl", license_checker_bin = "bin")
 
 # Link all local dependencies.
 npm_link_all_packages(name = "node_modules")
@@ -87,4 +88,19 @@ config_setting(
         "define": "build=optimized",
     },
     visibility = ["//visibility:public"],
+)
+
+allowed_licenses = "MIT;BSD-2-Clause;ISC;Apache-2.0;BSD-3-Clause;UNLICENSED"
+
+license_checker_bin.license_checker_test(
+    name = "license-check",
+    args = [
+        "--onlyAllow",
+        allowed_licenses,
+    ],
+    chdir = package_name(),
+    data = [
+        "package.json",
+        ":node_modules",
+    ],
 )

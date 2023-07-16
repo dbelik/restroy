@@ -6,11 +6,11 @@ export default class PaginationPageInputDto {
   @IsOptional()
   @IsInt()
   @Min(1)
-  public page?: number;
+  public readonly page?: number;
 
   @IsOptional()
   @IsInt()
   @Min(1)
   @Max(100)
-  public limit?: number;
+  public readonly limit?: number;
 }

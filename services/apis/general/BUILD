@@ -5,7 +5,6 @@ load("@aspect_rules_js//js:defs.bzl", "js_binary", "js_image_layer")
 # load("@aspect_rules_jasmine//jasmine:defs.bzl", "jasmine_test")
 load("@rules_oci//oci:defs.bzl", "oci_image", "oci_tarball")
 load("@npm//:eslint/package_json.bzl", eslint_bin = "bin")
-load("@npm//:license-checker/package_json.bzl", license_checker_bin = "bin")
 load("@npm//:defs.bzl", "npm_link_all_packages")
 load("@npm_prod//:defs.bzl", npm_link_all_prod_packages = "npm_link_all_packages")
 
@@ -98,21 +97,6 @@ eslint_bin.eslint_test(
         "**/*.ts",
     ]),
     visibility = ["//:__pkg__"],
-)
-
-allowed_licenses = "MIT;BSD-2-Clause;ISC;Apache-2.0;BSD-3-Clause;UNLICENSED"
-
-license_checker_bin.license_checker_test(
-    name = "license-check",
-    args = [
-        "--onlyAllow",
-        allowed_licenses,
-    ],
-    chdir = package_name(),
-    data = [
-        "package.json",
-        ":node_modules",
-    ],
 )
 
 # Build and publish Docker image

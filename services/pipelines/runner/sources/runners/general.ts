@@ -3,12 +3,12 @@ export interface IRunnerResult {
   data?: unknown;
 }
 
-export interface IRunnerData {
-  settings: {
-    [key: string]: unknown;
-  };
+export interface IScriptStatistics {
+  startedAt: string;
+  endedAt: string;
+  result: IRunnerResult;
 }
 
 export interface IRunner {
-  run(script: string, data: IRunnerData): Promise<IRunnerResult>;
+  run(script: string, data: object): Promise<IScriptStatistics>;
 }

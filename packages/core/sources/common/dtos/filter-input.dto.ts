@@ -20,10 +20,10 @@ export enum FilterOperatorsEnum {
 export default class FilterInputDto {
   @IsString()
   @Length(1, 255)
-  public name: string;
+  public readonly name: string;
 
   @IsEnum(FilterOperatorsEnum)
-  public operator: FilterOperatorsEnum;
+  public readonly operator: FilterOperatorsEnum;
 
-  public value: string | string[] | number | number[] | boolean | boolean[] | null;
+  public readonly value: string | string[] | number | number[] | boolean | boolean[] | null;
 }

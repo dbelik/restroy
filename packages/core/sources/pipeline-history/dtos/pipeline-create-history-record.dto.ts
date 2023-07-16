@@ -1,6 +1,6 @@
 import { IsDateString } from 'class-validator';
 
-export default class PipelineCreateHistoryRecordDto {
+export default class PipelineCreateHistoryRecordInputDto {
   @IsDateString()
-    start_date: string;
+  readonly start_date: string;
 }

@@ -1,8 +1,11 @@
 import {
   Body,
-  Controller, Get, Param, Post,
+  Controller, Get, Param, Patch, Post,
 } from '@nestjs/common';
-import { PipelineCreateHistoryRecordDto, PipelineHistoryModel, PipelineHistoryService } from '@restroy/core';
+import {
+  PipelineCreateHistoryRecordInputDto, PipelineHistoryModel,
+  PipelineHistoryService, PipelineUpdateHistoryRecordInputDto,
+} from '@restroy/core';
 
 @Controller('/pipelines/:pipelineId/history')
 export default class PipelineHistoryController {
@@ -20,8 +23,16 @@ export default class PipelineHistoryController {
   @Post()
   public async createPipelineHistoryRecord(
     @Param('pipelineId') pipelineId: string,
-      @Body() body: PipelineCreateHistoryRecordDto,
+      @Body() body: PipelineCreateHistoryRecordInputDto,
   ): Promise<PipelineHistoryModel> {
     return this.pipelineHistoryService.createPipelineHistory(pipelineId, body);
+  }
+
+  @Patch('/:historyRecordId')
+  public async updatePipelineHistoryRecord(
+    @Param('historyRecordId') historyRecordId: string,
+      @Body() body: PipelineUpdateHistoryRecordInputDto,
+  ): Promise<PipelineHistoryModel> {
+    return this.pipelineHistoryService.updatePipelineHistory(historyRecordId, body);
   }
 }

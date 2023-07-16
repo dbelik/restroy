@@ -1,7 +1,7 @@
 import { Type } from 'class-transformer';
 import {
   ArrayMaxSize,
-  IsArray, IsOptional, IsString, Length, ValidateNested,
+  IsArray, IsObject, IsOptional, IsString, Length, ValidateNested,
 } from 'class-validator';
 
 import FilterInputDto from './filter-input.dto';
@@ -13,17 +13,18 @@ export default class SearchInputDto {
   @IsString({ each: true })
   @Length(1, 255, { each: true })
   @ArrayMaxSize(5)
-    sort?: string[];
+  readonly sort?: string[];
 
   @IsOptional()
-  @ValidateNested({ each: true })
+  @ValidateNested()
+  @IsObject()
   @Type(() => PaginationPageInputDto)
-    pagination?: PaginationPageInputDto;
+  readonly pagination?: PaginationPageInputDto;
 
   @IsOptional()
   @IsArray()
   @ArrayMaxSize(5)
   @Type(() => FilterInputDto)
   @ValidateNested({ each: true })
-    filters?: FilterInputDto[];
+  readonly filters?: FilterInputDto[];
 }

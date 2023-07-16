@@ -1,21 +1,21 @@
-import { PipelineClient, PipelineHistoryClient } from '@restroy/api-clients';
+import { PipelineHistoryClient, PipelinesClient } from '@restroy/api-clients';
+import { PipelineHelper } from '@restroy/core';
 import { KafkaClientOptions, KafkaProducer } from '@restroy/kafka-client';
 import { scheduleJob } from 'node-schedule';
 
 import config from './config';
-import PipelineHelper from './pipeline-helper';
 
 class PipelineSchedulerServer {
   private producer: KafkaProducer;
 
-  private pipelineClient: PipelineClient;
+  private pipelineClient: PipelinesClient;
 
   private pipelineHelper: PipelineHelper;
 
   private pipelineHistoryClient: PipelineHistoryClient;
 
   constructor(kafkaConfig: KafkaClientOptions) {
-    this.pipelineClient = new PipelineClient(config.api.general.url);
+    this.pipelineClient = new PipelinesClient(config.api.general.url);
     this.pipelineHistoryClient = new PipelineHistoryClient(config.api.general.url);
     this.producer = new KafkaProducer(kafkaConfig);
     this.pipelineHelper = new PipelineHelper();
@@ -27,6 +27,9 @@ class PipelineSchedulerServer {
 
   loop() {
     return scheduleJob(config.scheduler.frequency, async (date) => {
+      date.setSeconds(0, 0);
+      date.setMilliseconds(0);
+
       let morePipelines = false;
       do {
         // eslint-disable-next-line no-await-in-loop
@@ -48,15 +51,10 @@ class PipelineSchedulerServer {
               date.toISOString(),
             );
 
-            const originalStructure = this.pipelineHelper.mapPipelineModel(
+            const messages = this.pipelineHelper.mapStructureToMessage(
               id,
-              historyRecord.original_settings,
-            );
-
-            const messages = this.pipelineHelper.mapChildrenToMessages(
               historyRecord.id,
-              originalStructure.id,
-              originalStructure.children,
+              historyRecord.original_structure,
             );
 
             console.log(`Sending ${messages.length} messages to Kafka`);

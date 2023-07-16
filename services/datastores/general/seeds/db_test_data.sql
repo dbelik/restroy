@@ -36,7 +36,7 @@ INSERT INTO workspace_management.plugins(
   creator_id
 ) VALUES (
     1, 'Hello World', 'Plugin to print hello world to the console',
-    '{ "language": "Javascript" }', 'console.log("Hello World")',
+    '{ "language": "Javascript" }', 'console.log("Hello World"); return {data: "Hellow World"};',
     1
 )
   ON CONFLICT DO NOTHING;

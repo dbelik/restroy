@@ -172,7 +172,7 @@ CREATE TABLE workspace_management.pipeline_history (
   id SERIAL PRIMARY KEY,
   pipeline_id BIGINT NOT NULL,
   status workspace_management.pipeline_status_enum NOT NULL DEFAULT 'pending',
-  original_settings JSONB NOT NULL DEFAULT '{}'::jsonb,
+  original_structure JSONB NOT NULL DEFAULT '{}'::jsonb,
   started_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   ended_at TIMESTAMP,
 
@@ -184,7 +184,7 @@ CREATE TABLE workspace_management.plugins (
   name VARCHAR(255) NOT NULL UNIQUE,
   description TEXT NOT NULL,
   tags VARCHAR(31)[] NOT NULL DEFAULT array[]::varchar[],
-  settings JSONB NOT NULL DEFAULT '{}'::jsonb,
+  settings JSONB NOT NULL,
   code TEXT NOT NULL,
   creator_id BIGINT NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
