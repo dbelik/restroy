@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
-import { CronService, SearchInputDto } from '../../common';
-import { IRepositoryClient, SearchRepository } from '../../common/repositories';
+import { CronService } from '../../common';
+import { CrudRepository, IRepositoryClient } from '../../common/repositories';
 import { PipelineModel } from '../models';
 
 export type PipelineUpdateInput = Partial<Pick<PipelineModel, 'name' | 'description' | 'interval' | 'next_date' | 'board_id' | 'deactivated_at'> & {
@@ -10,75 +10,14 @@ export type PipelineUpdateInput = Partial<Pick<PipelineModel, 'name' | 'descript
 export type PipelineCreateInput = Pick<PipelineModel, 'name' | 'description' | 'interval' | 'board_id'>;
 
 @Injectable()
-export default class PipelinesRepository extends SearchRepository<PipelineModel> {
+export default class PipelinesRepository extends CrudRepository<PipelineModel> {
   constructor(
     private readonly cronService: CronService,
   ) {
     super();
   }
 
-  async getPipeline(client: IRepositoryClient, id: string): Promise<PipelineModel> {
-    const query = 'SELECT * FROM pipelines WHERE id = $1';
-    const parameters = [id];
-    const result = await client.query<PipelineModel>(query, parameters);
-    return result[0];
-  }
-
-  async getPipelines(client: IRepositoryClient, ids: string[]): Promise<PipelineModel[]> {
-    const query = 'SELECT * FROM pipelines WHERE id IN $1';
-    const parameters = [ids];
-    const result = await client.query<PipelineModel>(query, parameters);
-    return result;
-  }
-
-  async searchPipelines(
-    client: IRepositoryClient,
-    search: SearchInputDto,
-    allowedFields: string[],
-  ) {
-    return this.searchWithPages(client, search, 'workspace_management.pipelines', allowedFields);
-  }
-
-  async updatePipeline(
-    client: IRepositoryClient,
-    id: string,
-    data: PipelineUpdateInput,
-  ): Promise<PipelineModel> {
-    let query = 'UPDATE workspace_management.pipelines SET ';
-    const parameters: string[] = [];
-    Object.entries(data).forEach(([key, value], index, array) => {
-      parameters.push(value);
-      query += `${key} = $${index + 1}`;
-      query += index === array.length - 1 ? ' ' : ', ';
-    });
-    query += `WHERE id = $${parameters.length + 1} RETURNING *;`;
-    parameters.push(id);
-
-    const result = await client.query<PipelineModel>(query, parameters);
-    return result[0];
-  }
-
-  async createPipeline(
-    client: IRepositoryClient,
-    data: PipelineCreateInput,
-  ): Promise<PipelineModel> {
-    const query = `
-      INSERT INTO workspace_management.pipelines (
-        name, description, interval, next_date, board_id, structure
-      ) VALUES (
-        $1, $2, $3, $4, $5, $6
-      ) RETURNING *;
-    `;
-
-    const parameters = [
-      data.name, data.description, data.interval,
-      new Date(0).toISOString(), data.board_id,
-      '{"nodes":[{ "v": "START" }],"edges":[]}',
-    ];
-
-    const result = await client.query<PipelineModel>(query, parameters);
-    return result[0];
-  }
+  table = 'workspace_management.pipelines';
 
   async advancePipelines(
     client: IRepositoryClient,
@@ -112,12 +51,5 @@ export default class PipelinesRepository extends SearchRepository<PipelineModel>
     query += ') RETURNING *;';
 
     return client.query<PipelineModel>(query, parameters);
-  }
-
-  async deletePipeline(client: IRepositoryClient, id: string): Promise<PipelineModel | undefined> {
-    const query = 'DELETE FROM workspace_management.pipelines WHERE id = $1 RETURNING *;';
-    const parameters = [id];
-    const result = await client.query<PipelineModel>(query, parameters);
-    return result[0];
   }
 }

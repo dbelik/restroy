@@ -13,4 +13,11 @@ export default {
       port: Number.parseInt(config.get('DATABASE_SIMPLEPOOL_PORT', '6000'), 10),
     },
   },
+
+  encryption: {
+    providerName: 'ENCRYPTION',
+    algorithm: config.get('ENCRYPTION_ALGORITHM', 'aes-256-cbc'),
+    key: config.get('ENCRYPTION_KEY', '12345678901234567890123456789012'),
+    iv: config.get('ENCRYPTION_IV', '1234567890123456'),
+  },
 };

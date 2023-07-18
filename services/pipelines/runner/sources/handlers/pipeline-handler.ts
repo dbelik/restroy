@@ -1,6 +1,7 @@
 import { PipelineHistoryClient, PluginsClient } from '@restroy/api-clients';
 import {
-  PipelineHistoryModel, PipelineHistoryNodeModel,
+  PipelineHistoryModel,
+  PipelineHistoryNodeDecryptedModel,
   PipelineMessageNodeModel,
   PipelineStatusEnum,
   PipelineUpdateHistoryRecordInputDto,
@@ -24,33 +25,38 @@ export default class PipelineHandler {
   }
 
   async handleOneNode(node: PipelineMessageNodeModel): Promise<PipelineHistoryModel> {
-    const pipeline = await this.pipelineHistoryClient.getPipelineHistoryRecord(
-      node.pipeline_id,
-      node.history_record_id,
-    );
-    const structure = Pipeline.tryCreateFromJSON(pipeline.original_structure);
-    const nodeData = structure.node(node.node_id) as PipelineHistoryNodeModel;
-    const plugin = await this.pluginsClient.getPlugin(nodeData.plugin_id);
-    const pluginResult = await this.pluginRunner.run(plugin, {});
-    const data: PipelineUpdateHistoryRecordInputDto = {
-      structure: {
-        nodes: [{
-          v: node.node_id,
-          value: {
-            status:
-              pluginResult.result.success
-                ? PipelineStatusEnum.SUCCESS
-                : PipelineStatusEnum.FAILED,
-            finished_at: pluginResult.endedAt,
-            started_at: pluginResult.startedAt,
-          },
-        }],
-      },
-    };
-    return this.pipelineHistoryClient.updatePipelineHistoryRecord(
-      node.pipeline_id,
-      node.history_record_id,
-      data,
-    );
+    try {
+      const pipeline = await this.pipelineHistoryClient.getPipelineHistoryRecord(
+        node.pipeline_id,
+        node.history_record_id,
+      );
+      const structure = Pipeline.tryCreateFromJSON(pipeline.original_structure);
+      const nodeData = structure.node(node.node_id) as PipelineHistoryNodeDecryptedModel;
+      const plugin = await this.pluginsClient.getPlugin(nodeData.plugin_id);
+      const pluginResult = await this.pluginRunner.run(plugin, nodeData.settings);
+      const data: PipelineUpdateHistoryRecordInputDto = {
+        structure: {
+          nodes: [{
+            v: node.node_id,
+            value: {
+              status:
+                pluginResult.result.success
+                  ? PipelineStatusEnum.SUCCESS
+                  : PipelineStatusEnum.FAILED,
+              finished_at: pluginResult.endedAt,
+              started_at: pluginResult.startedAt,
+            },
+          }],
+        },
+      };
+      return await this.pipelineHistoryClient.updatePipelineHistoryRecord(
+        node.pipeline_id,
+        node.history_record_id,
+        data,
+      );
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   }
 }

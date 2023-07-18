@@ -1,6 +1,6 @@
 import { PipelineStatusEnum } from '../../pipelines/dtos';
 
-export default class PipelineHistoryNodeValueModel {
+export default class PipelineHistoryNodeEncryptedModelValueModel {
   status: PipelineStatusEnum;
 
   started_at: string;

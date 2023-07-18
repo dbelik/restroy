@@ -1,6 +1,12 @@
 import { Graph, json } from '@dagrejs/graphlib';
 import { isAcyclic } from '@dagrejs/graphlib/lib/alg';
 
+export type PipelineNodeObject = {
+  edges: object[];
+  nodes: object[]
+  options: object;
+};
+
 export default class Pipeline extends Graph {
   public static tryCreateFromString(encoded: string, options?: object): Pipeline | null {
     try {
@@ -49,10 +55,14 @@ export default class Pipeline extends Graph {
   }
 
   public static pipelineToString(pipeline: Pipeline): string {
-    return JSON.stringify(json.write(pipeline));
+    const result = json.write(pipeline) as PipelineNodeObject;
+    delete result.options;
+    return JSON.stringify(result);
   }
 
   public static pipelineToObject(pipeline: Pipeline): object {
-    return json.write(pipeline);
+    const result = json.write(pipeline) as PipelineNodeObject;
+    delete result.options;
+    return result;
   }
 }

@@ -21,7 +21,7 @@ export default class PipelineHistoryClient extends HttpClient {
     date: string,
   ): Promise<PipelineHistoryModel> {
     const result = await this.sendRequest<PipelineHistoryModel>('POST', `/pipelines/${pipelineId}/history`, {
-      start_date: date,
+      started_at: date,
     });
     return result.data;
   }

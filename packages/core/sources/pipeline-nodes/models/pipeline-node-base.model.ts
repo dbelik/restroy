@@ -1,7 +1,5 @@
-export default class PipelineNodeModel {
+export default class PipelineNodeBaseModel {
   id: string;
-
-  settings: object;
 
   pipeline_id: string;
 

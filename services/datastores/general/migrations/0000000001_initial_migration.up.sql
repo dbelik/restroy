@@ -66,10 +66,9 @@ CREATE TABLE workspace_management.user_invites (
   token VARCHAR(255) NOT NULL,
   user_inviting_id BIGINT NOT NULL,
   team_id BIGINT NOT NULL,
-  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 
-  FOREIGN KEY (user_inviting_id) REFERENCES workspace_management.users(id),
-  FOREIGN KEY (team_id) REFERENCES workspace_management.teams(id)
+  FOREIGN KEY (team_id) REFERENCES workspace_management.teams(id) ON DELETE CASCADE
 );
 
 CREATE TABLE workspace_management.permissions (
@@ -81,17 +80,17 @@ CREATE TABLE workspace_management.roles (
   id SERIAL PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
   description TEXT NOT NULL,
-  team_id BIGINT NOT NULL,
+  team_id BIGINT,
 
-  FOREIGN KEY (team_id) REFERENCES workspace_management.teams(id)
+  FOREIGN KEY (team_id) REFERENCES workspace_management.teams(id) ON DELETE CASCADE
 );
 
 CREATE TABLE workspace_management.role_permissions (
   role_id BIGINT NOT NULL,
   permission_id BIGINT NOT NULL,
 
-  FOREIGN KEY (role_id) REFERENCES workspace_management.roles(id),
-  FOREIGN KEY (permission_id) REFERENCES workspace_management.permissions(id)
+  FOREIGN KEY (role_id) REFERENCES workspace_management.roles(id) ON DELETE CASCADE,
+  FOREIGN KEY (permission_id) REFERENCES workspace_management.permissions(id) ON DELETE CASCADE
 );
 
 CREATE TABLE workspace_management.team_members (
@@ -101,8 +100,8 @@ CREATE TABLE workspace_management.team_members (
   invited_by BIGINT,
   joined_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-  FOREIGN KEY (user_id) REFERENCES workspace_management.users(id),
-  FOREIGN KEY (team_id) REFERENCES workspace_management.teams(id),
+  FOREIGN KEY (user_id) REFERENCES workspace_management.users(id) ON DELETE CASCADE,
+  FOREIGN KEY (team_id) REFERENCES workspace_management.teams(id) ON DELETE CASCADE,
   FOREIGN KEY (role_id) REFERENCES workspace_management.roles(id)
 );
 
@@ -117,8 +116,7 @@ CREATE TABLE workspace_management.boards (
   deactivated_at TIMESTAMP,
   deleted_at TIMESTAMP,
 
-  FOREIGN KEY (team_id) REFERENCES workspace_management.teams(id),
-  FOREIGN KEY (owner_id) REFERENCES workspace_management.users(id)
+  FOREIGN KEY (team_id) REFERENCES workspace_management.teams(id) ON DELETE CASCADE
 );
 
 CREATE TABLE workspace_management.boards_users (
@@ -127,10 +125,9 @@ CREATE TABLE workspace_management.boards_users (
   role_id BIGINT NOT NULL,
   invited_by BIGINT,
 
-  FOREIGN KEY (board_id) REFERENCES workspace_management.boards(id),
-  FOREIGN KEY (user_id) REFERENCES workspace_management.users(id),
-  FOREIGN KEY (role_id) REFERENCES workspace_management.roles(id),
-  FOREIGN KEY (invited_by) REFERENCES workspace_management.users(id)
+  FOREIGN KEY (board_id) REFERENCES workspace_management.boards(id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES workspace_management.users(id) ON DELETE CASCADE,
+  FOREIGN KEY (role_id) REFERENCES workspace_management.roles(id)
 );
 
 CREATE TABLE workspace_management.pipelines (
@@ -157,7 +154,7 @@ CREATE TABLE workspace_management.pipelines (
   deactivated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   deleted_at TIMESTAMP,
 
-  FOREIGN KEY (board_id) REFERENCES workspace_management.boards(id)
+  FOREIGN KEY (board_id) REFERENCES workspace_management.boards(id) ON DELETE CASCADE
 );
 
 CREATE TYPE workspace_management.pipeline_status_enum AS ENUM (
@@ -176,7 +173,7 @@ CREATE TABLE workspace_management.pipeline_history (
   started_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   finished_at TIMESTAMP,
 
-  FOREIGN KEY (pipeline_id) REFERENCES workspace_management.pipelines(id)
+  FOREIGN KEY (pipeline_id) REFERENCES workspace_management.pipelines(id) ON DELETE CASCADE
 );
 
 CREATE TABLE workspace_management.plugins (
@@ -189,9 +186,7 @@ CREATE TABLE workspace_management.plugins (
   creator_id BIGINT NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  deleted_at TIMESTAMP,
-
-  FOREIGN KEY (creator_id) REFERENCES workspace_management.users(id)
+  deleted_at TIMESTAMP
 );
 
 CREATE TABLE workspace_management.pipeline_items (
@@ -200,6 +195,5 @@ CREATE TABLE workspace_management.pipeline_items (
   config JSONB NOT NULL DEFAULT '{}'::jsonb,
   plugin_id BIGINT NOT NULL,
 
-  FOREIGN KEY (pipeline_id) REFERENCES workspace_management.pipelines(id),
-  FOREIGN KEY (plugin_id) REFERENCES workspace_management.plugins(id)
+  FOREIGN KEY (pipeline_id) REFERENCES workspace_management.pipelines(id) ON DELETE CASCADE
 );

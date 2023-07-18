@@ -28,7 +28,6 @@ class PipelineRunnerServer {
       message: async (payload) => {
         const pipelineString = payload.message.value.toString();
         const node = JSON.parse(pipelineString) as PipelineMessageNodeModel;
-        console.log(node);
         const history = await this.pipelineHandler.handleOneNode(node);
         const messages = this.pipelineHelper.mapStructureToMessage(
           node.pipeline_id,

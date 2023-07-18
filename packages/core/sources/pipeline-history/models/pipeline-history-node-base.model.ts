@@ -1,4 +1,4 @@
-export default class PipelineHistoryNode {
+export default class PipelineHistoryNodeBaseModel {
   status: string;
 
   started_at?: string;

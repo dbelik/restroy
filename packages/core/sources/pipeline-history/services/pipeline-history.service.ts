@@ -1,6 +1,4 @@
-import {
-  HttpException, HttpStatus, Inject, Injectable,
-} from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Pipeline } from '@restroy/pipeline-utils';
 
 import { DatabaseClient } from '../../common';
@@ -23,13 +21,15 @@ export default class PipelineHistoryService {
   ) {}
 
   async getPipelineHistoryRecord(historyRecordId: string): Promise<PipelineHistoryModel> {
-    const result = await this.pipelineHistoryRepository.getPipelineHistoryRecord(
+    const result = await this.pipelineHistoryRepository.getOne(
       this.databaseClient,
       historyRecordId,
     );
-    if (!result) {
-      throw new HttpException('Pipelines history record not found', HttpStatus.NOT_FOUND);
-    }
+    result.original_structure = Pipeline.pipelineToObject(
+      this.pipelineHistoryHelper.decryptHistoryRecordStructure(
+        Pipeline.tryCreateFromJSON(result.original_structure),
+      ),
+    );
     return result;
   }
 
@@ -41,16 +41,28 @@ export default class PipelineHistoryService {
       this.pipelineNodeService.getPipelineNodes(pipelineId),
       this.pipelineService.getPipeline(pipelineId),
     ]);
-    const originalSettings = this.pipelineHistoryHelper.injectNodesDataIntoStructure(
-      Pipeline.tryCreateFromJSON(pipeline.structure),
-      nodes,
+    const originalSettings = this.pipelineHistoryHelper.encryptHistoryRecordStructure(
+      this.pipelineHistoryHelper.injectNodesDataIntoStructure(
+        Pipeline.tryCreateFromJSON(pipeline.structure),
+        nodes,
+      ),
     );
-    return this.pipelineHistoryRepository.createPipelineHistoryRecord(
+
+    const result = await this.pipelineHistoryRepository.createOne(
       this.databaseClient,
-      pipelineId,
-      Pipeline.pipelineToString(originalSettings),
-      data,
+      {
+        ...data,
+        pipeline_id: pipelineId,
+        original_structure: Pipeline.pipelineToString(originalSettings),
+        status: PipelineStatusEnum.PENDING,
+      },
     );
+    result.original_structure = Pipeline.pipelineToObject(
+      this.pipelineHistoryHelper.decryptHistoryRecordStructure(
+        Pipeline.tryCreateFromJSON(result.original_structure),
+      ),
+    );
+    return result;
   }
 
   async updatePipelineHistory(
@@ -63,14 +75,24 @@ export default class PipelineHistoryService {
       data.structure,
     );
     const status = this.pipelineHistoryHelper.chooseHistoryRecordStatusFromStructure(newStructure);
-    return this.pipelineHistoryRepository.updatePipelineHistoryRecord(
+    const result = await this.pipelineHistoryRepository.update(
       this.databaseClient,
       historyRecordId,
       {
-        original_structure: Pipeline.pipelineToString(newStructure),
+        original_structure: Pipeline.pipelineToString(
+          this.pipelineHistoryHelper.encryptHistoryRecordStructure(
+            newStructure,
+          ),
+        ),
         status,
         finished_at: status === PipelineStatusEnum.SUCCESS ? new Date().toISOString() : null,
       },
     );
+    result.original_structure = Pipeline.pipelineToObject(
+      this.pipelineHistoryHelper.decryptHistoryRecordStructure(
+        Pipeline.tryCreateFromJSON(result.original_structure),
+      ),
+    );
+    return result;
   }
 }

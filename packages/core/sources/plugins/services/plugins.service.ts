@@ -14,7 +14,7 @@ export default class PluginsService {
   ) {}
 
   async getPlugin(id: string): Promise<PluginModel> {
-    const result = await this.pluginsRepository.getPlugin(this.databaseClient, id);
+    const result = await this.pluginsRepository.getOne(this.databaseClient, id);
     if (!result) {
       throw new HttpException('Plugin not found', HttpStatus.NOT_FOUND);
     }

@@ -21,6 +21,8 @@ export default abstract class SearchRepository<T> {
 
   protected defaultPage = 1;
 
+  protected table: string;
+
   private constructWhereClause(
     parameters: string[],
     filters: FilterInputDto[],
@@ -80,12 +82,11 @@ export default abstract class SearchRepository<T> {
   async searchWithPages(
     client: IRepositoryClient,
     search: SearchInputDto,
-    table: string,
     allowedFields: string[] = [],
   ): Promise<SearchResult<T>> {
     let countQuery = `
     (SELECT COUNT(*)::int
-      FROM ${table}
+      FROM ${this.table}
     `;
     let dataQuery = `
       (SELECT json_agg(t.*) FROM (

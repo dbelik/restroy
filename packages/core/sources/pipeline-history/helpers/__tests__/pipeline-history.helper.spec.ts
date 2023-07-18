@@ -1,12 +1,22 @@
 import { Pipeline } from '@restroy/pipeline-utils';
 
+import { EncryptionHelper } from '../../../common';
+import { PipelineNodeHelper } from '../../../pipeline-nodes';
 import PipelineHistoryHelper from '../pipeline-history.helper';
 
 describe('PipelineHistoryHelper class', () => {
   let pipelineHistoryHelper: PipelineHistoryHelper;
+  let pipelineNodeHelper: PipelineNodeHelper;
 
   beforeEach(() => {
-    pipelineHistoryHelper = new PipelineHistoryHelper();
+    pipelineNodeHelper = new PipelineNodeHelper(
+      new EncryptionHelper(
+        'aes-256-cbc',
+        '12345678901234567890123456789012',
+        '1234567890123456',
+      ),
+    );
+    pipelineHistoryHelper = new PipelineHistoryHelper(pipelineNodeHelper);
   });
 
   describe('injectNodesDataIntoStructure method', () => {
@@ -39,6 +49,7 @@ describe('PipelineHistoryHelper class', () => {
             value: {
               status: 'pending',
               plugin_id: '13',
+              settings: {},
             },
           },
         ],

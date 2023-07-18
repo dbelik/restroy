@@ -1,11 +1,10 @@
 CREATE TABLE workspace_management.pipeline_nodes (
   id SERIAL PRIMARY KEY,
-  settings JSONB NOT NULL DEFAULT '{}'::jsonb,
+  settings TEXT NOT NULL, -- Text, because it's encrypted
   pipeline_id BIGINT NOT NULL,
   plugin_id BIGINT NOT NULL,
 
-  FOREIGN KEY (pipeline_id) REFERENCES workspace_management.pipelines(id),
-  FOREIGN KEY (plugin_id) REFERENCES workspace_management.plugins(id)
+  FOREIGN KEY (pipeline_id) REFERENCES workspace_management.pipelines(id) ON DELETE CASCADE
 );
 
 CREATE INDEX pipeline_nodes_pipeline_id
